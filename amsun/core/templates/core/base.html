@@ -69,9 +69,27 @@
         }
     </script>
     <style>
-        * {
+        *, *::before, *::after {
+            box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+            min-width: 0;
+        }
+
+        img,
+        picture,
+        svg,
+        video,
+        iframe,
+        embed,
+        object {
+            max-width: 100%;
+            height: auto;
         }
 
         .header-transition {
@@ -512,7 +530,7 @@
     </footer>
     <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4">
         <div id="chat-window"
-            class="w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 hidden flex-col overflow-hidden origin-bottom-right transition-all duration-300 transform scale-95 opacity-0">
+            class="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 hidden flex-col overflow-hidden origin-bottom-right transition-all duration-300 transform scale-95 opacity-0">
             <div
                 class="bg-gradient-to-r from-amsun-red to-amsun-darkRed p-5 flex justify-between items-center text-white shadow-md">
                 <div class="flex items-center gap-4">
