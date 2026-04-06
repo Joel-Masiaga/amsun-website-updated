@@ -1,0 +1,838 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMSUN - Association of Medical Students, University of Nairobi</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Open Sans"', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                        serif: ['"Source Serif Pro"', 'serif'],
+                    },
+                    colors: {
+                        amsun: {
+                            red: '#E3241C',
+                            darkRed: '#B91C1C',
+                            black: '#1A1A1A',
+                            gold: '#F9B233',
+                            gray: '#F8F9FA',
+                            text: '#2D2D2D',
+                            purple: '#7C3AED',
+                            darkPurple: '#5B21B6',
+                            beige: '#FEF3C7',
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 30s linear infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 20px 40px rgba(0, 0, 0, 0.12)',
+                        'glow': '0 0 20px rgba(227, 36, 28, 0.3)',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #E3241C;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B91C1C;
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-shadow-md {
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .aspect-video {
+            aspect-ratio: 16/9;
+        }
+
+        /* Active navigation item styling */
+        .nav-item.active {
+            color: #F9B233;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .hero-height {
+                height: 90vh;
+                min-height: 500px;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body
+    class="text-amsun-text bg-white font-sans antialiased selection:bg-amsun-red selection:text-white overflow-x-hidden">
+
+    <div id="toast-stack" class="fixed top-20 right-4 z-[100] space-y-3 max-w-sm w-[calc(100vw-2rem)] sm:w-96"
+        aria-live="polite" aria-atomic="true">
+        {% if messages %}
+        {% for message in messages %}
+        {% with tags=message.tags %}
+        <div class="toast pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-lg shadow-lg border
+                    {% if 'success' in tags %} bg-green-600 text-white border-green-500
+                    {% elif 'error' in tags %} bg-red-600 text-white border-red-500
+                    {% elif 'warning' in tags %} bg-yellow-500 text-white border-yellow-400
+                    {% else %} bg-primary text-white border-primary
+                    {% endif %}">
+            <div class="shrink-0">
+                {% if 'success' in tags %}
+                <i class="fas fa-check-circle"></i>
+                {% elif 'error' in tags %}
+                <i class="fas fa-times-circle"></i>
+                {% elif 'warning' in tags %}
+                <i class="fas fa-exclamation-triangle"></i>
+                {% else %}
+                <i class="fas fa-info-circle"></i>
+                {% endif %}
+            </div>
+            <div class="text-sm font-medium flex-1">{{ message }}</div>
+            <button class="ml-2 text-white/80 hover:text-white close-toast" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        {% endwith %}
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <header id="main-header" class="fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm">
+        <div id="top-bar"
+            class="header-transition w-full border-b border-white/10 px-6 py-3 bg-gradient-to-r from-black/20 to-transparent">
+            <div class="container mx-auto flex justify-between items-center">
+
+                <a href="#"
+                    class="font-display font-extrabold text-xl md:text-2xl tracking-tight leading-none text-white hover:opacity-90 transition-all duration-300 group flex items-center">
+                    <div class="flex items-center">
+                        <img src="{% static 'core/logo.png' %}"
+                            alt="AMSUN - Association of Medical Students, University of Nairobi"
+                            class="h-8 md:h-10 w-auto mr-3 transition-all duration-300 group-hover:scale-105 rounded-md">
+
+                        <span class="sr-only">AMSUN</span>
+
+                        <span
+                            class="hidden text-lg font-black bg-gradient-to-r from-white to-amsun-gold bg-clip-text text-transparent">
+                            AMSUN
+                        </span>
+                    </div>
+
+                    <span
+                        class="hidden md:block h-4 w-px bg-amsun-gold mx-3 opacity-80 shadow-[0_0_8px_rgba(249,178,51,0.8)] group-hover:opacity-100 transition-opacity"></span>
+
+                    <span
+                        class="text-xs font-sans font-medium tracking-wider uppercase hidden md:block opacity-90 group-hover:opacity-100 transition-opacity">
+                        University of Nairobi
+                    </span>
+                </a>
+
+                <div class="flex items-center gap-3 md:gap-4 text-sm font-semibold text-white">
+
+                    <nav class="hidden md:flex gap-4 text-xs">
+                        <a href="{% url 'home' %}" class="hover:text-amsun-gold transition">Students</a>
+                        <a href="#" class="hover:text-amsun-gold transition">Alumni</a>
+                        <a href="#" class="hover:text-amsun-gold transition border-r border-white/40 pr-4">Partners</a>
+                    </nav>
+
+                    <a href="#"
+                        class="group flex items-center gap-1.5 font-bold transition md:bg-amsun-red md:px-3 md:py-1.5 rounded-[5px] md:hover:opacity-80">
+                        <span class="hidden md:inline">Search</span>
+                        <i
+                            class="fas fa-search text-base md:text-sm group-hover:text-amsun-gold md:group-hover:text-white transition-colors"></i>
+                    </a>
+
+                    <a href="#"
+                        class="lg:hidden bg-amsun-red text-white text-[11px] px-2.5 py-1.5 rounded-[5px] font-bold hover:bg-white hover:text-amsun-red transition flex items-center gap-1 shadow-sm">
+                        Donate <i class="fas fa-hand-holding-heart text-[10px]"></i>
+                    </a>
+
+                    <button id="mobile-menu-btn"
+                        class="lg:hidden flex items-center gap-1.5 text-sm font-medium hover:text-amsun-gold transition-colors focus:outline-none">
+                        Menu <i class="fas fa-bars text-lg"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="nav-bar" class="header-transition w-full px-6">
+            <div class="container mx-auto">
+                <nav id="nav-links"
+                    class="hidden lg:flex justify-center items-center gap-8 py-3 text-lg font-semibold tracking-wide text-white header-transition">
+                    <a href="{% url 'home' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="{% url 'events-list' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'events-list' %}active{% endif %}">Events
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="{% url 'news-list' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'news-list' %}active{% endif %}">News
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="{% url 'leadership' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}">Leadership
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="#" class="nav-item group relative pb-1 transition-colors duration-300">Clubs <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="#" class="nav-item group relative pb-1 transition-colors duration-300">Resources <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="{% url 'conference' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'conference' %}active{% endif %}">Scientific
+                        Conference <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="{% url 'blog-list' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'blog-list' %}active{% endif %}">Blogs<span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <a href="#"
+                        class="bg-amsun-red hover:bg-white hover:text-amsun-red text-white text-sm px-6 py-2 rounded-[5px] font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_15px_rgba(227,36,28,0.5)] ml-2 flex items-center gap-2">
+                        Donate <i class="fas fa-hand-holding-heart"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div id="mobile-menu"
+            class="hidden lg:hidden absolute left-0 top-full w-full bg-white/95 backdrop-blur-md text-amsun-text border-t rounded-b-[5px] border-gray-100 shadow-xl z-50">
+
+            <div class="flex justify-end pt-3 pr-4 mb-2">
+                <button onclick="document.getElementById('mobile-menu').classList.add('hidden')"
+                    class="p-2 text-gray-500 hover:text-amsun-red transition-colors focus:outline-none">
+                    <span class="sr-only">Close menu</span>
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="flex flex-col px-6 pb-6 space-y-3 font-semibold text-base">
+
+                <a href="{% url 'home' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'home' %}text-amsun-red pl-2{% endif %}">Home</a>
+                <a href="{% url 'events-list' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'events-list' %}text-amsun-red pl-2{% endif %}">Events</a>
+                <a href="{% url 'news-list' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'news-list' %}text-amsun-red pl-2{% endif %}">News</a>
+                <a href="{% url 'leadership' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'leadership' %}text-amsun-red pl-2{% endif %}">Leadership</a>
+                <a href="#"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2">Clubs</a>
+                <a href="#"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2">Resources</a>
+                <a href="{% url 'conference' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all {% if request.resolver_match.url_name == 'conference' %}text-amsun-red pl-2{% endif %}">Scientific
+                    Conference</a>
+
+                <div class="flex flex-row justify-center gap-6 pt-4 mt-2 border-t border-gray-100">
+                    <a href="{% url 'home' %}"
+                        class="block text-sm text-gray-500 font-medium hover:text-amsun-red transition-colors">Students</a>
+                    <a href="#"
+                        class="block text-sm text-gray-500 font-medium hover:text-amsun-red transition-colors">Alumni</a>
+                    <a href="#"
+                        class="block text-sm text-gray-500 font-medium hover:text-amsun-red transition-colors">Partners</a>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    {% block content %}
+
+    {% endblock %}
+
+    <section id="campus-map-section" class="bg-white border-t border-gray-100 transition-all duration-300">
+        <div class="container mx-auto px-4">
+
+            <button onclick="toggleMap()"
+                class="w-full py-4 flex items-center justify-between text-left group hover:bg-gray-50 px-3 md:px-4 rounded-[5px] transition-colors duration-300">
+                <div class="pr-4">
+                    <h3 class="text-sm md:text-base font-bold text-amsun-black flex items-center gap-2.5">
+                        <i class="fas fa-map-marked-alt text-amsun-red"></i> Campus Navigation
+                    </h3>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1 group-hover:text-amsun-red transition-colors">
+                        Interactive campus maps for both KNH and Chiromo campuses
+                    </p>
+                </div>
+                <div
+                    class="flex items-center gap-2 text-xs md:text-sm font-bold text-gray-500 group-hover:text-amsun-red transition-colors whitespace-nowrap">
+                    <span id="map-text" class="hidden sm:block">Show Map</span>
+                    <i id="map-icon" class="fas fa-chevron-down transition-transform duration-300"></i>
+                </div>
+            </button>
+
+            <div id="map-container" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out opacity-0">
+                <div class="pb-6 pt-2">
+
+                    <div class="flex flex-row justify-center mb-4 gap-2 md:gap-4">
+                        <button onclick="switchMap('knh')" id="btn-knh"
+                            class="flex-1 md:flex-none px-3 md:px-8 py-2.5 md:py-3 rounded-[5px] text-xs md:text-sm font-bold bg-amsun-red text-white shadow hover:shadow-md transition-all duration-300 whitespace-nowrap">
+                            KNH Campus
+                        </button>
+                        <button onclick="switchMap('chiromo')" id="btn-chiromo"
+                            class="flex-1 md:flex-none px-3 md:px-8 py-2.5 md:py-3 rounded-[5px] text-xs md:text-sm font-bold bg-white text-gray-700 border-2 border-gray-200 hover:border-amsun-red hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                            UoN Chiromo
+                        </button>
+                    </div>
+
+                    <div
+                        class="mb-4 bg-gray-50 border-l-4 border-amsun-red px-4 py-3 rounded-r-[5px] flex flex-col justify-center">
+                        <h4 id="map-title" class="font-bold text-sm md:text-base text-amsun-black">
+                            Kenyatta National Hospital Campus
+                        </h4>
+                        <p id="map-desc" class="text-xs md:text-sm text-gray-600 mt-0.5">
+                            Clinical Years (Level 3-6) & Hospital Wards
+                        </p>
+                    </div>
+
+                    <div
+                        class="w-full h-64 md:h-96 rounded-[5px] overflow-hidden shadow-md border border-gray-200 group">
+                        <iframe id="map-frame"
+                            src="https://maps.google.com/maps?q=Kenyatta+National+Hospital&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                            class="grayscale group-hover:grayscale-0 transition duration-700"></iframe>
+                    </div>
+
+                    <div
+                        class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-5 text-xs md:text-sm text-gray-600 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-[5px] bg-amsun-red"></div> Lecture Halls
+                        </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-[5px] bg-blue-500"></div> Hostels
+                        </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-[5px] bg-amsun-gold"></div> Library
+                        </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <div class="w-2.5 h-2.5 rounded-[5px] bg-green-500"></div> Administration
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-amsun-black text-white pt-20 pb-10 border-t-4 border-amsun-gold relative">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-base">
+                <div>
+                    <h4
+                        class="text-white font-display font-bold mb-8 uppercase tracking-wider text-sm border-b border-white/10 pb-3 inline-block">
+                        Organization</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> About AMSUN</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Leadership</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Alumni Network</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Constitution</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4
+                        class="text-white font-display font-bold mb-8 uppercase tracking-wider text-sm border-b border-white/10 pb-3 inline-block">
+                        Resources</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Student Portal</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> E-Learning</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Clubs & Societies</a></li>
+                        <li><a href="#"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> Past Papers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4
+                        class="text-white font-display font-bold mb-8 uppercase tracking-wider text-sm border-b border-white/10 pb-3 inline-block">
+                        Contact</h4>
+                    <ul class="space-y-5 text-gray-400">
+                        <li class="flex items-start gap-4">
+                            <i class="fas fa-map-marker-alt mt-1 text-amsun-gold"></i>
+                            <span>P.O. Box 30197-00100<br>Nairobi, Kenya</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <i class="fas fa-envelope text-amsun-gold"></i>
+                            <a href="mailto:amsun@uonbi.ac.ke"
+                                class="hover:text-white transition-colors">amsun@uonbi.ac.ke</a>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <i class="fas fa-phone text-amsun-gold"></i>
+                            <a href="tel:+254722000000" class="hover:text-white transition-colors">+254 722 000
+                                000</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4
+                        class="text-white font-display font-bold mb-8 uppercase tracking-wider text-sm border-b border-white/10 pb-3 inline-block">
+                        Stay Updated</h4>
+                    <p class="text-sm text-gray-500 mb-6">Subscribe to our newsletter for the latest updates and
+                        announcements.</p>
+                    <form class="flex gap-3 mb-8">
+                        <input type="email" placeholder="Your email address"
+                            class="flex-grow bg-white/5 border border-white/10 rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20">
+                        <button
+                            class="bg-amsun-red text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-white hover:text-amsun-red transition-all duration-300">Subscribe</button>
+                    </form>
+                    <div class="flex gap-5">
+                        <a href="#"
+                            class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
+                                class="fab fa-twitter text-lg"></i></a>
+                        <a href="#"
+                            class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
+                                class="fab fa-instagram text-lg"></i></a>
+                        <a href="#"
+                            class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
+                                class="fab fa-linkedin text-lg"></i></a>
+                        <a href="#"
+                            class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
+                                class="fab fa-youtube text-lg"></i></a>
+                        <a href="#"
+                            class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
+                                class="fab fa-whatsapp text-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="mt-16 pt-8 border-t border-white/10 flex flex-col lg:flex-row justify-between items-center text-sm text-gray-500">
+                <p>© 2026 AMSUN - Association of Medical Students, University of Nairobi. All Rights Reserved.</p>
+                <div class="flex gap-6 mt-4 lg:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Accessibility</a>
+                    <a href="#" class="hover:text-white transition-colors">Sitemap</a>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-white/5 text-center">
+                <p class="text-xs text-gray-400">Built by <span class="text-gray-400 font-medium">Kuza Digital
+                        Solutions</span></p>
+            </div>
+
+        </div>
+    </footer>
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4">
+        <div id="chat-window"
+            class="w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 hidden flex-col overflow-hidden origin-bottom-right transition-all duration-300 transform scale-95 opacity-0">
+            <div
+                class="bg-gradient-to-r from-amsun-red to-amsun-darkRed p-5 flex justify-between items-center text-white shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><i
+                            class="fas fa-robot"></i></div>
+                    <div>
+                        <span class="font-bold text-base block">AMSUN Assistant</span>
+                        <span class="text-xs opacity-90 flex items-center gap-2"><span
+                                class="w-2 h-2 rounded-full bg-green-400 block"></span> Online - Ready to
+                            help</span>
+                    </div>
+                </div>
+                <button id="close-chat"
+                    class="hover:bg-white/10 w-9 h-9 rounded-full flex items-center justify-center transition"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <div class="p-5 h-80 overflow-y-auto bg-gray-50 space-y-4">
+                <div
+                    class="bg-white border border-gray-100 p-4 rounded-2xl rounded-tl-none self-start max-w-[85%] text-gray-700 shadow-sm">
+                    <p class="text-sm">Hello! I'm your AMSUN assistant. How can I help you today? I can assist with:
+                    </p>
+                    <ul class="text-xs text-gray-600 mt-2 space-y-1">
+                        <li>• Finding event details</li>
+                        <li>• Locating past papers</li>
+                        <li>• Campus navigation</li>
+                        <li>• Contact information</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100 flex gap-3 bg-white">
+                <input type="text" placeholder="Type your question here..."
+                    class="flex-grow text-sm px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20 bg-gray-50">
+                <button
+                    class="text-white bg-amsun-red hover:bg-amsun-black w-12 h-12 rounded-xl flex items-center justify-center transition shadow-md"><i
+                        class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <button id="chat-btn"
+            class="bg-amsun-red text-white w-16 h-16 rounded-full shadow-2xl hover:bg-amsun-black transition-all duration-300 hover:scale-110 flex items-center justify-center ring-4 ring-white/20 animate-float">
+            <i class="fas fa-comments text-2xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Header Scroll Effect
+        const header = document.getElementById('main-header');
+        const topBar = document.getElementById('top-bar');
+        const navBar = document.getElementById('nav-bar');
+
+        function updateHeader() {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-amsun-black/95', 'shadow-xl', 'backdrop-blur-md');
+                topBar.classList.add('opacity-0', 'h-0', 'py-0', 'overflow-hidden');
+                navBar.classList.add('py-5');
+            } else {
+                header.classList.remove('bg-amsun-black/95', 'shadow-xl', 'backdrop-blur-md');
+                topBar.classList.remove('opacity-0', 'h-0', 'py-0', 'overflow-hidden');
+                navBar.classList.remove('py-5');
+            }
+        }
+        window.addEventListener('scroll', updateHeader);
+        updateHeader(); // Initial call
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('animate-fade-in-up');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Chat Widget
+        const chatBtn = document.getElementById('chat-btn');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+
+        chatBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('hidden');
+            setTimeout(() => {
+                chatWindow.classList.remove('scale-95', 'opacity-0');
+                chatWindow.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            chatBtn.classList.add('scale-0', 'opacity-0');
+            setTimeout(() => chatBtn.classList.add('hidden'), 300);
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatWindow.classList.remove('scale-100', 'opacity-100');
+            chatWindow.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                chatWindow.classList.add('hidden');
+                chatBtn.classList.remove('hidden');
+                setTimeout(() => chatBtn.classList.remove('scale-0', 'opacity-0'), 10);
+            }, 300);
+        });
+
+        // Map Toggle Logic
+        function toggleMap() {
+            const mapContainer = document.getElementById('map-container');
+            const mapIcon = document.getElementById('map-icon');
+            const mapText = document.getElementById('map-text');
+
+            if (mapContainer.classList.contains('max-h-0')) {
+                // Open
+                mapContainer.classList.remove('max-h-0', 'opacity-0');
+                mapContainer.classList.add('max-h-[800px]', 'opacity-100');
+                mapIcon.classList.add('rotate-180');
+                mapText.textContent = "Hide Map";
+            } else {
+                // Close
+                mapContainer.classList.remove('max-h-[800px]', 'opacity-100');
+                mapContainer.classList.add('max-h-0', 'opacity-0');
+                mapIcon.classList.remove('rotate-180');
+                mapText.textContent = "Show Map";
+            }
+        }
+
+        // Campus Switcher
+        function switchMap(campus) {
+            const frame = document.getElementById('map-frame');
+            const title = document.getElementById('map-title');
+            const desc = document.getElementById('map-desc');
+            const btnKnh = document.getElementById('btn-knh');
+            const btnChiromo = document.getElementById('btn-chiromo');
+
+            if (campus === 'knh') {
+                frame.src = "https://maps.google.com/maps?q=Kenyatta+National+Hospital&t=&z=15&ie=UTF8&iwloc=&output=embed";
+                title.textContent = "Kenyatta National Hospital Campus";
+                desc.textContent = "Clinical Years (Level 3-6) & Hospital Wards";
+
+                // Style Active Button
+                btnKnh.classList.remove('bg-white', 'text-gray-700', 'border');
+                btnKnh.classList.add('bg-amsun-red', 'text-white', 'shadow-xl');
+
+                // Style Inactive Button
+                btnChiromo.classList.remove('bg-amsun-red', 'text-white', 'shadow-xl');
+                btnChiromo.classList.add('bg-white', 'text-gray-700', 'border');
+            } else {
+                frame.src = "https://maps.google.com/maps?q=Chiromo+Campus+University+of+Nairobi&t=&z=16&ie=UTF8&iwloc=&output=embed";
+                title.textContent = "UoN Chiromo Campus";
+                desc.textContent = "Pre-Clinical Years (Level 1-2) & Basic Sciences";
+
+                // Style Active Button
+                btnChiromo.classList.remove('bg-white', 'text-gray-700', 'border');
+                btnChiromo.classList.add('bg-amsun-red', 'text-white', 'shadow-xl');
+
+                // Style Inactive Button
+                btnKnh.classList.remove('bg-amsun-red', 'text-white', 'shadow-xl');
+                btnKnh.classList.add('bg-white', 'text-gray-700', 'border');
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add hover effect to cards
+        document.querySelectorAll('.shadow-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-8px)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Counter Animation for Stats Section
+        const statsSection = document.querySelector('.border-amsun-red');
+        let hasAnimated = false;
+
+        function animateCounters() {
+            if (hasAnimated) return;
+
+            const counters = statsSection.querySelectorAll('.text-4xl.md\\:text-5xl');
+            const targets = [50, 2500, 8000, 10];
+            const duration = 2000; // 2 seconds
+            const startTime = Date.now();
+
+            counters.forEach((counter, index) => {
+                const target = targets[index];
+                const suffix = counter.textContent.match(/\D+/)?.[0] || '';
+
+                function update() {
+                    const now = Date.now();
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const current = Math.floor(progress * target);
+                    counter.textContent = current.toLocaleString() + suffix;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+
+                update();
+            });
+
+            hasAnimated = true;
+        }
+
+        // Intersection Observer to trigger animation when section is in view
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(statsSection);
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(statsSection);
+
+        // --- CAROUSEL LOGIC ---
+        function initCarousel(trackId, prevBtnId, nextBtnId) {
+            const track = document.getElementById(trackId);
+            const prevBtn = document.getElementById(prevBtnId);
+            const nextBtn = document.getElementById(nextBtnId);
+
+            if (!track || !prevBtn || !nextBtn) return;
+
+            let currentIndex = 0;
+            const items = track.children;
+            const totalItems = items.length;
+            let autoSlideInterval;
+
+            function getItemsPerView() {
+                if (window.innerWidth >= 1024) return 4;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+
+            function updateCarousel() {
+                const itemsPerView = getItemsPerView();
+                // Ensure we don't slide past the end
+                if (currentIndex > totalItems - itemsPerView) {
+                    currentIndex = 0; // Loop back to start
+                }
+                if (currentIndex < 0) {
+                    currentIndex = totalItems - itemsPerView; // Loop to end
+                }
+
+                const widthPercentage = 100 / itemsPerView;
+                const translateValue = -(currentIndex * widthPercentage);
+                track.style.transform = `translateX(${translateValue}%)`;
+            }
+
+            function nextSlide() {
+                currentIndex++;
+                updateCarousel();
+            }
+
+            function prevSlide() {
+                currentIndex--;
+                updateCarousel();
+            }
+
+            function startAutoSlide() {
+                stopAutoSlide(); // Clear existing
+                autoSlideInterval = setInterval(nextSlide, 4000); // 4 seconds
+            }
+
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+
+            // Event Listeners
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                startAutoSlide(); // Restart timer
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                startAutoSlide(); // Restart timer
+            });
+
+            // Pause on hover
+            track.addEventListener('mouseenter', stopAutoSlide);
+            track.addEventListener('mouseleave', startAutoSlide);
+
+            // Handle Resize
+            window.addEventListener('resize', updateCarousel);
+
+            // Initial Start
+            startAutoSlide();
+        }
+
+        // Initialize Carousels
+        document.addEventListener('DOMContentLoaded', () => {
+            initCarousel('welcome-track', 'welcome-prev', 'welcome-next');
+            initCarousel('events-track', 'events-prev', 'events-next');
+            initCarousel('news-track', 'news-prev', 'news-next');
+        });
+    </script>
+</body>
+
+</html>

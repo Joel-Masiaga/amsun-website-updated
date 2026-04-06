@@ -1,0 +1,399 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}News - AMSUN{% endblock %}
+
+{% block content %}
+
+<section class="relative w-full pt-40 pb-16 md:pt-52 md:pb-24 overflow-hidden bg-cover bg-center bg-no-repeat"
+    style="background-image: url('https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
+
+    <div class="absolute inset-0 bg-gradient-to-b from-amsun-black/95 via-amsun-black/75 to-[#FAFAFA] z-0"></div>
+
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-amsun-red/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 left-0 w-64 h-64 bg-amsun-gold/15 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10 max-w-7xl">
+
+        <div class="text-center mx-auto max-w-4xl mb-12 md:mb-16 animate-fade-in-up">
+            <span
+                class="text-amsun-gold font-bold text-xs md:text-sm uppercase tracking-[0.2em] mb-3 block drop-shadow-sm">AMSUN
+                News Hub</span>
+            <h1
+                class="text-4xl md:text-5xl lg:text-6xl font-sans font-black text-white leading-tight tracking-tight drop-shadow-md">
+                Discover the <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-white to-amsun-red drop-shadow-xl">Future</span>
+                of Medicine
+            </h1>
+        </div>
+
+        {% if featured_news %}
+        <div
+            class="group relative rounded-[5px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 bg-white grid lg:grid-cols-2 h-auto lg:h-[350px]">
+            <div class="relative h-64 lg:h-full overflow-hidden">
+                {% if featured_news.image %}
+                <img src="{{ featured_news.image.url }}" alt="{{ featured_news.headline }}"
+                    class="w-full h-full object-cover transition-transform duration-[15s] ease-out group-hover:scale-105">
+                {% else %}
+                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-5xl text-gray-300"></i>
+                </div>
+                {% endif %}
+                <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
+                <div class="absolute top-4 left-4 z-10">
+                    <span
+                        class="inline-flex items-center gap-1.5 bg-white text-amsun-black px-3 py-1.5 rounded-[5px] font-extrabold text-[9px] uppercase tracking-widest shadow-sm border border-gray-100">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amsun-red animate-pulse"></span>
+                        {{ featured_news.get_category_display }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 flex flex-col justify-center bg-white relative z-10 border-l border-gray-100/50">
+                <div class="mb-3 flex items-center gap-2">
+                    <span class="text-amsun-red font-bold text-[10px] uppercase tracking-widest">Top Story</span>
+                </div>
+                <h3
+                    class="text-xl md:text-2xl font-sans font-black text-amsun-black mb-3 leading-[1.2] group-hover:text-amsun-red transition-colors duration-300 line-clamp-2">
+                    {{ featured_news.headline }}
+                </h3>
+                <p class="text-gray-600 text-xs md:text-sm leading-relaxed mb-6 line-clamp-3">
+                    {{ featured_news.content|striptags|truncatewords:35 }}
+                </p>
+
+                <div class="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-feather-alt text-amsun-red text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="font-extrabold text-xs text-amsun-black">{{ featured_news.author }}</p>
+                            <p class="text-[9px] font-semibold uppercase tracking-widest text-gray-400 mt-0.5">{{
+                                featured_news.published_date|date:"F d, Y" }}</p>
+                        </div>
+                    </div>
+                    <a href="#"
+                        class="inline-flex items-center justify-center bg-amsun-red text-white w-8 h-8 rounded-[5px] hover:bg-amsun-black transition-all duration-300 shadow-sm group-hover:scale-105">
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="bg-white py-3 md:py-4 sticky top-16 md:top-20 z-40 border-b border-gray-200/60 shadow-sm">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
+
+            <div class="relative w-full md:w-auto flex items-center flex-grow overflow-hidden group/nav">
+
+                <button id="cat-scroll-left"
+                    class="md:hidden absolute left-0 z-10 w-8 h-full flex items-center justify-start bg-gradient-to-r from-white via-white to-transparent text-gray-400 hover:text-amsun-red transition-all duration-300 focus:outline-none opacity-0 pointer-events-none">
+                    <div
+                        class="bg-white border border-gray-200 rounded-[5px] w-6 h-6 flex items-center justify-center shadow-sm">
+                        <i class="fas fa-chevron-left text-[9px]"></i>
+                    </div>
+                </button>
+
+                <div id="cat-scroll-container"
+                    class="flex items-center gap-2 overflow-x-auto hide-scrollbar w-full scroll-smooth relative px-1">
+                    <span
+                        class="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap hidden sm:block mr-1">Topics:</span>
+
+                    <a href="{% url 'news-list' %}"
+                        class="flex-shrink-0 px-4 py-2 rounded-[5px] font-bold text-[11px] md:text-xs transition-all duration-300 {% if not request.GET.category %}bg-amsun-black text-white shadow-sm{% else %}bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-100{% endif %}">
+                        All News
+                    </a>
+                    {% for code, name in categories %}
+                    <a href="?category={{ code }}"
+                        class="flex-shrink-0 px-4 py-2 rounded-[5px] font-bold text-[11px] md:text-xs transition-all duration-300 {% if request.GET.category == code %}bg-amsun-black text-white shadow-sm{% else %}bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-100{% endif %}">
+                        {{ name }}
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <button id="cat-scroll-right"
+                    class="md:hidden absolute right-0 z-10 w-8 h-full flex items-center justify-end bg-gradient-to-l from-white via-white to-transparent text-gray-400 hover:text-amsun-red transition-all duration-300 focus:outline-none">
+                    <div
+                        class="bg-white border border-gray-200 rounded-[5px] w-6 h-6 flex items-center justify-center shadow-sm">
+                        <i class="fas fa-chevron-right text-[9px]"></i>
+                    </div>
+                </button>
+            </div>
+
+            <form action="{% url 'news-list' %}" method="get"
+                class="relative w-full md:w-auto md:min-w-[250px] flex-shrink-0">
+                <input type="text" name="q" placeholder="Search articles..." value="{{ request.GET.q }}"
+                    class="w-full pl-9 pr-3 py-2 rounded-[5px] bg-gray-50 border border-gray-200 focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/10 text-xs font-semibold transition-all shadow-inner">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-8 md:py-12 bg-[#FAFAFA] px-4 min-h-screen">
+    <div class="container mx-auto max-w-7xl">
+        <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
+
+            <div class="lg:col-span-2">
+                <div class="mb-6 flex items-end justify-between border-b border-gray-200/60 pb-3">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-sans font-black text-amsun-black tracking-tight mb-1.5">
+                            Latest Articles</h2>
+                        <div class="w-10 h-1 bg-amsun-red rounded-full"></div>
+                    </div>
+                    <span class="text-gray-400 font-bold uppercase tracking-widest text-[10px] hidden sm:block">
+                        Showing {{ page_obj.start_index|default:"0" }}-{{ page_obj.end_index|default:"0" }} of {{
+                        paginator.count|default:"0" }}
+                    </span>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 md:gap-6">
+                    {% for article in news %}
+                    <div
+                        class="group bg-white rounded-[5px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:-translate-y-1 flex flex-col h-full">
+                        <div class="relative h-40 md:h-48 overflow-hidden">
+                            {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.headline }}"
+                                class="w-full h-full object-cover transition-transform duration-[10s] ease-out group-hover:scale-105">
+                            {% else %}
+                            <div
+                                class="w-full h-full bg-gray-100 flex items-center justify-center transition-transform duration-[10s] ease-out group-hover:scale-105">
+                                <i class="fas fa-camera text-2xl text-gray-300"></i>
+                            </div>
+                            {% endif %}
+                            <div
+                                class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500">
+                            </div>
+                            <span
+                                class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-amsun-black px-2.5 py-1 rounded-[5px] text-[9px] font-black uppercase tracking-widest shadow-sm">
+                                {{ article.get_category_display }}
+                            </span>
+                        </div>
+                        <div class="p-4 md:p-5 flex flex-col flex-grow">
+                            <h4
+                                class="text-sm md:text-base font-sans font-black text-amsun-black mb-2.5 leading-[1.3] group-hover:text-amsun-red transition-colors line-clamp-2">
+                                {{ article.headline }}
+                            </h4>
+                            <p
+                                class="text-gray-500 text-[10px] md:text-xs leading-relaxed mb-4 line-clamp-3 font-medium">
+                                {{ article.content|striptags|truncatewords:20 }}
+                            </p>
+                            <div class="mt-auto flex items-center justify-between pt-3 border-t border-gray-50">
+                                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                                    <i class="far fa-calendar-alt mr-1 text-gray-300"></i>{{
+                                    article.published_date|date:"j M Y" }}
+                                </span>
+                                <a href="#"
+                                    class="w-7 h-7 rounded-[5px] bg-gray-50 flex items-center justify-center text-amsun-black group-hover:bg-amsun-red group-hover:text-white transition-all duration-300 shadow-sm">
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div
+                        class="col-span-full py-12 text-center bg-white rounded-[5px] border border-dashed border-gray-200">
+                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="far fa-newspaper text-3xl text-gray-300"></i>
+                        </div>
+                        <h3 class="text-lg font-black text-gray-800 mb-1">No Articles Found</h3>
+                        <p class="text-gray-500 text-xs font-medium">Try selecting a different category.</p>
+                        <a href="{% url 'news-list' %}"
+                            class="inline-block mt-4 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-amsun-black font-bold rounded-[5px] transition-colors text-[10px] uppercase tracking-widest">Clear
+                            Filters</a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if is_paginated %}
+                <div class="mt-10 flex justify-center gap-2">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"
+                        class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-[5px] bg-white border border-gray-200 text-gray-600 hover:bg-amsun-red hover:text-white hover:border-amsun-red transition-all text-xs font-bold shadow-sm">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    {% endif %}
+
+                    {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <span
+                        class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-[5px] bg-amsun-black text-white text-xs font-black shadow-sm">
+                        {{ num }}
+                    </span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a
+                        href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"
+                        class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-[5px] bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 transition-all text-xs font-bold shadow-sm">
+                        {{ num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}"
+                            class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-[5px] bg-white border border-gray-200 text-gray-600 hover:bg-amsun-red hover:text-white hover:border-amsun-red transition-all text-xs font-bold shadow-sm">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="lg:col-span-1 space-y-6">
+
+                <div class="bg-white rounded-[5px] p-5 shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amsun-red/5 rounded-bl-full -z-0"></div>
+                    <div class="flex items-center gap-2 mb-5 relative z-10">
+                        <div class="w-8 h-8 rounded-[5px] bg-amsun-red/10 flex items-center justify-center">
+                            <i class="fas fa-fire text-amsun-red text-xs"></i>
+                        </div>
+                        <h3 class="text-lg font-sans font-black text-amsun-black tracking-tight">
+                            Trending Now
+                        </h3>
+                    </div>
+
+                    <div class="space-y-4 relative z-10">
+                        {% for item in trending_news %}
+                        <a href="#" class="group flex gap-3 bg-transparent transition-all items-start">
+                            <span
+                                class="flex-shrink-0 text-xl font-sans font-black text-gray-200 transition-colors pt-0.5 group-hover:text-amsun-red/30">
+                                0{{ forloop.counter }}
+                            </span>
+                            <div>
+                                <h4
+                                    class="font-bold text-[11px] md:text-xs text-amsun-black group-hover:text-amsun-red transition-colors leading-snug line-clamp-2">
+                                    {{ item.headline }}
+                                </h4>
+                                <span class="text-[9px] font-bold text-gray-400 mt-1 block uppercase tracking-widest"><i
+                                        class="far fa-clock mr-1"></i>{{ item.published_date|date:"M d, Y" }}</span>
+                            </div>
+                        </a>
+                        {% if not forloop.last %}
+                        <hr class="border-gray-50">{% endif %}
+                        {% empty %}
+                        <p class="text-xs font-medium text-gray-500">No trending articles.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-[#1A1A1A] to-[#2D2D2D] rounded-[5px] p-5 text-white shadow-sm relative overflow-hidden group">
+                    <div
+                        class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full group-hover:scale-150 transition-transform duration-1000 ease-out">
+                    </div>
+                    <h3 class="text-sm font-sans font-black mb-4 tracking-wide">Quick Stats</h3>
+                    <div class="space-y-3 relative z-10">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-0.5">Total
+                                Articles</span>
+                            <span class="text-2xl font-black text-white">{{ paginator.count|default:"0" }}</span>
+                        </div>
+                        <hr class="border-white/10">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-0.5">Active
+                                Categories</span>
+                            <span class="text-xl font-black text-amsun-gold">{{ categories|length }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amsun-red rounded-[5px] p-5 text-center shadow-md relative overflow-hidden">
+                    <div class="absolute -left-6 -top-6 w-20 h-20 bg-white/10 rounded-full blur-lg"></div>
+                    <div
+                        class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-[5px] flex items-center justify-center mx-auto mb-4 relative z-10">
+                        <i class="far fa-envelope-open text-sm text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-sans font-black text-white mb-2 relative z-10">Stay Updated</h3>
+                    <p class="text-[10px] text-white/90 mb-5 font-medium leading-relaxed relative z-10">Join our mailing
+                        list to receive the latest updates.</p>
+                    <form class="space-y-2 relative z-10">
+                        <input type="email" placeholder="Email Address" required
+                            class="w-full px-3 py-2 rounded-[5px] border-none outline-none text-black text-xs font-bold placeholder-gray-400 focus:ring-2 focus:ring-white/30 transition-all shadow-inner">
+                        <button type="submit"
+                            class="w-full px-3 py-2 rounded-[5px] bg-[#1A1A1A] hover:bg-black text-white font-black text-[10px] uppercase tracking-widest shadow-sm transition-colors hover:-translate-y-px">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+
+<script>
+    // Smooth scroll for anchors
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Mobile Category Scroll Logic
+    document.addEventListener("DOMContentLoaded", function () {
+        const catContainer = document.getElementById('cat-scroll-container');
+        const catLeftBtn = document.getElementById('cat-scroll-left');
+        const catRightBtn = document.getElementById('cat-scroll-right');
+
+        if (catContainer && catLeftBtn && catRightBtn) {
+            // Scroll logic
+            const scrollAmount = 150;
+
+            catLeftBtn.addEventListener('click', () => {
+                catContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+
+            catRightBtn.addEventListener('click', () => {
+                catContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            });
+
+            // Visibility toggle based on scroll position
+            const updateButtonVisibility = () => {
+                // If scrolling isn't needed or device is desktop, the CSS hides the buttons naturally
+                if (catContainer.scrollLeft <= 0) {
+                    catLeftBtn.classList.add('opacity-0', 'pointer-events-none');
+                } else {
+                    catLeftBtn.classList.remove('opacity-0', 'pointer-events-none');
+                }
+
+                // Allow 2px tolerance for rounding decimals
+                if (catContainer.scrollLeft + catContainer.clientWidth >= catContainer.scrollWidth - 2) {
+                    catRightBtn.classList.add('opacity-0', 'pointer-events-none');
+                } else {
+                    catRightBtn.classList.remove('opacity-0', 'pointer-events-none');
+                }
+            };
+
+            catContainer.addEventListener('scroll', updateButtonVisibility);
+            window.addEventListener('resize', updateButtonVisibility);
+
+            // Initial check
+            setTimeout(updateButtonVisibility, 100);
+        }
+    });
+</script>
+
+{% endblock %}

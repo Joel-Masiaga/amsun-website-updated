@@ -1,0 +1,216 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ blog.title }} - AMSUN{% endblock %}
+
+{% block content %}
+    <!-- Article Header -->
+    <section class="relative w-full h-[70vh] min-h-[600px] flex items-end justify-center overflow-hidden pt-24">
+        <div class="absolute inset-0 z-0">
+            {% if blog.image %}
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Article Header" class="w-full h-full object-cover">
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-r from-amsun-black/95 via-amsun-black/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-amsun-black/80 via-transparent to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 w-full px-4 pb-12 text-white max-w-4xl mx-auto">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-amsun-red px-4 py-2 rounded-full text-sm font-bold">
+                    {% for value, label in blog.CATEGORY_CHOICES %}
+                        {% if value == blog.category %}{{ label }}{% endif %}
+                    {% endfor %}
+                </span>
+                <span class="text-gray-300 text-sm">{{ blog.created_at|date:"F j, Y" }}</span>
+            </div>
+            <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight drop-shadow-2xl mb-6 leading-tight">
+                {{ blog.title }}
+            </h1>
+            <div class="flex items-center gap-6 flex-wrap">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name={{ blog.author }}&background=E3241C&color=fff" alt="Author" class="w-12 h-12 rounded-full border-2 border-white">
+                    <div>
+                        <p class="font-semibold">{{ blog.author }}</p>
+                        <p class="text-sm text-gray-300">Content Author</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-gray-300">
+                    <i class="fas fa-clock"></i>
+                    <span class="text-sm">{{ blog.body|length|add:"-1"|stringformat:"d" |divisibleby:"200"|yesno:"10,8" }} min read</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Article Content -->
+    <section class="py-20 px-4 bg-white">
+        <div class="container mx-auto max-w-3xl">
+            <!-- Main Content -->
+            <article class="prose prose-lg max-w-none mb-16">
+                {% if blog.image %}
+                    <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full rounded-2xl shadow-lg mb-8">
+                {% endif %}
+
+                <div class="text-gray-700 leading-relaxed text-lg mb-6">
+                    {{ blog.body|linebreaks }}
+                </div>
+            </article>
+
+            <!-- Share Buttons -->
+            <div class="border-t border-b border-gray-200 py-6 mb-12">
+                <p class="text-sm font-semibold text-gray-600 mb-4">Share this article:</p>
+                <div class="flex gap-4">
+                    <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors font-semibold">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                    <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors font-semibold">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </a>
+                    <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors font-semibold">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                    <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors font-semibold">
+                        <i class="fas fa-link"></i> Copy Link
+                    </a>
+                </div>
+            </div>
+
+            <!-- Author Box -->
+            <div class="bg-gradient-to-r from-amsun-gray to-white border-l-4 border-amsun-red p-8 rounded-lg mb-12">
+                <div class="flex gap-6 items-start">
+                    <img src="https://ui-avatars.com/api/?name={{ blog.author }}&background=E3241C&color=fff&size=120" alt="{{ blog.author }}" class="w-24 h-24 rounded-full flex-shrink-0">
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold text-amsun-black mb-2">{{ blog.author }}</h3>
+                        <p class="text-sm text-amsun-red font-semibold mb-3">Content Author</p>
+                        <p class="text-gray-700 mb-4">
+                            This article has been carefully crafted to provide valuable insights and comprehensive information on the topic. The author brings expertise and experience to deliver quality content to our AMSUN community.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="#" class="text-amsun-red hover:text-amsun-black transition-colors"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-amsun-red hover:text-amsun-black transition-colors"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-amsun-red hover:text-amsun-black transition-colors"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Articles -->
+            {% if related_blogs %}
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-amsun-black mb-8">Related Articles</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for related_blog in related_blogs %}
+                    <a href="{% url 'blog-detail' pk=related_blog.pk %}" class="group bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-500 overflow-hidden border border-gray-100 hover:-translate-y-2 flex">
+                        <div class="relative w-32 h-32 flex-shrink-0 overflow-hidden">
+                            {% if related_blog.image %}
+                                <img src="{{ related_blog.image.url }}" alt="{{ related_blog.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Related" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            {% endif %}
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <p class="text-xs text-amsun-red font-bold mb-2">
+                                {% for value, label in blog.CATEGORY_CHOICES %}
+                                    {% if value == related_blog.category %}{{ label }}{% endif %}
+                                {% endfor %}
+                            </p>
+                            <h4 class="font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-amsun-red transition-colors">
+                                {{ related_blog.title }}
+                            </h4>
+                            <p class="text-xs text-gray-500">{{ related_blog.created_at|date:"F j, Y" }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Comments Section (Placeholder) -->
+    <section class="py-16 px-4 bg-gray-50 border-t border-gray-200">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-3xl font-bold text-amsun-black mb-8">Comments</h2>
+            
+            <!-- Comment Form -->
+            <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm mb-8">
+                <h3 class="text-lg font-bold text-amsun-black mb-6">Leave a Comment</h3>
+                <form class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20">
+                        <input type="email" placeholder="Your Email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20">
+                    </div>
+                    <textarea placeholder="Your Comment" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20 resize-none"></textarea>
+                    <button type="submit" class="bg-amsun-red text-white font-bold px-6 py-3 rounded-lg hover:bg-amsun-black transition-all duration-300">
+                        Post Comment
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Comments -->
+            <div class="space-y-6">
+                <!-- Comment 1 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="flex gap-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=E3241C&color=fff" alt="Commenter" class="w-12 h-12 rounded-full">
+                        <div class="flex-grow">
+                            <p class="font-bold text-amsun-black">John Doe</p>
+                            <p class="text-xs text-gray-500">2 days ago</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        This is a really insightful article about medical technology. I especially appreciated the section on AI in diagnostics. It's clear that understanding these tools will be crucial for our generation of doctors.
+                    </p>
+                    <button class="text-sm text-amsun-red font-semibold hover:text-amsun-black transition-colors mt-4">Reply</button>
+                </div>
+
+                <!-- Comment 2 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+                    <div class="flex gap-4 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=E3241C&color=fff" alt="Commenter" class="w-12 h-12 rounded-full">
+                        <div class="flex-grow">
+                            <p class="font-bold text-amsun-black">Jane Smith</p>
+                            <p class="text-xs text-gray-500">1 day ago</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        Thanks for bringing attention to telemedicine. During my clinical rotations, I've seen firsthand how it's changing patient care. The ethical considerations section was particularly valuable.
+                    </p>
+                    <button class="text-sm text-amsun-red font-semibold hover:text-amsun-black transition-colors mt-4">Reply</button>
+                </div>
+            </div>
+
+            <!-- Load More Comments -->
+            <div class="text-center mt-8">
+                <button class="text-amsun-red font-bold hover:text-amsun-black transition-colors">Load More Comments</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 bg-gradient-to-r from-amsun-black to-amsun-darkRed text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-amsun-red/10 rounded-full blur-[100px]"></div>
+        
+        <div class="container mx-auto max-w-4xl relative z-10 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Enjoyed This Article?</h2>
+            <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                Subscribe to our newsletter to receive more insightful articles on medical education, technology, and career development.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                <a href="{% url 'blog-list' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white text-white hover:bg-white hover:text-amsun-black transition-all duration-300 font-bold">
+                    <i class="fas fa-arrow-left"></i> Back to All Articles
+                </a>
+                <button class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-amsun-gold text-amsun-black hover:bg-white transition-all duration-300 font-bold">
+                    <i class="fas fa-bell"></i> Subscribe
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Placeholder scripts for interactivity
+        console.log('Blog detail page loaded');
+    </script>
+{% endblock %}

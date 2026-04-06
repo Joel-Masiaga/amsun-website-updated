@@ -1,0 +1,214 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Blogs - AMSUN{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden pt-24">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1507842217343-583b7270a7e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Blog" class="w-full h-full object-cover transition-transform duration-[20s] group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-r from-amsun-black/95 via-amsun-black/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-amsun-black/50 via-transparent to-transparent"></div>
+        </div>
+        <div class="relative z-10 text-center px-4 animate-fade-in-up max-w-4xl mx-auto">
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-white font-extrabold tracking-tighter drop-shadow-2xl mb-4">Blog</h1>
+            <div class="w-24 h-1.5 bg-amsun-red mx-auto mb-6 shadow-[0_0_15px_rgba(227,36,28,0.6)]"></div>
+            <p class="text-gray-300 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+                Explore insightful articles, research updates, and stories from AMSUN members
+            </p>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="py-8 px-4 bg-white border-b border-gray-100">
+        <div class="container mx-auto max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-amsun-black mb-2">All Articles</h2>
+                    <p class="text-gray-600">Browse through our collection of articles and research</p>
+                </div>
+                <div class="w-full md:w-auto">
+                    <form method="get" class="flex gap-2">
+                        <select name="category" id="category-filter" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20 bg-white font-medium text-gray-700">
+                            <option value="">All Categories</option>
+                            {% for value, label in categories %}
+                                <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="px-4 py-3 bg-amsun-red text-white rounded-lg hover:bg-amsun-black transition-colors font-medium whitespace-nowrap">
+                            Filter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blogs Grid Section -->
+    <section class="py-20 px-4 bg-white">
+        <div class="container mx-auto max-w-7xl">
+            <!-- Featured Blog Post -->
+            {% if featured_blog %}
+            <div class="mb-16 rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 border border-gray-100 group">
+                <div class="grid grid-cols-1 lg:grid-cols-3 h-auto lg:h-96">
+                    <!-- Image -->
+                    <div class="lg:col-span-1 h-64 lg:h-full overflow-hidden relative">
+                        {% if featured_blog.image %}
+                            <img src="{{ featured_blog.image.url }}" alt="{{ featured_blog.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Featured Blog" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% endif %}
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-amsun-red text-white px-4 py-2 rounded-full text-sm font-bold">Featured</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="lg:col-span-2 p-8 lg:p-10 flex flex-col justify-between bg-white">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="text-xs font-bold text-amsun-red uppercase tracking-widest">
+                                    {% for value, label in categories %}
+                                        {% if value == featured_blog.category %}{{ label }}{% endif %}
+                                    {% endfor %}
+                                </span>
+                                <span class="text-xs text-gray-500">{{ featured_blog.created_at|date:"F j, Y" }}</span>
+                            </div>
+                            <h3 class="text-3xl font-display font-bold text-amsun-black mb-4 group-hover:text-amsun-red transition-colors">
+                                {{ featured_blog.title }}
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed line-clamp-3 mb-4">
+                                {{ featured_blog.body|truncatewords:50 }}
+                            </p>
+                            <div class="flex items-center gap-4 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <img src="https://ui-avatars.com/api/?name={{ featured_blog.author }}&background=E3241C&color=fff" alt="Author" class="w-8 h-8 rounded-full">
+                                    <span class="font-semibold text-gray-700">{{ featured_blog.author }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="{% url 'blog-detail' pk=featured_blog.pk %}" class="inline-flex items-center gap-2 text-amsun-red font-bold hover:text-amsun-black transition-colors mt-6 group/arrow">
+                            Read Full Article
+                            <span class="w-8 h-8 rounded-full bg-amsun-red/10 flex items-center justify-center group-hover/arrow:bg-amsun-red group-hover/arrow:text-white transition-all">
+                                <i class="fas fa-arrow-right text-sm"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Blog Cards Grid -->
+            {% if blogs %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for blog in blogs %}
+                <a href="{% url 'blog-detail' pk=blog.pk %}" class="bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-500 group overflow-hidden border border-gray-100 hover:-translate-y-2 flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        {% if blog.image %}
+                            <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Blog" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        {% endif %}
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                            <span class="text-xs font-bold text-amsun-black">
+                                {% for value, label in categories %}
+                                    {% if value == blog.category %}{{ label }}{% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="mb-3">
+                            <span class="text-xs text-gray-500 font-medium">{{ blog.created_at|date:"F j, Y" }}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-amsun-black mb-3 line-clamp-2 group-hover:text-amsun-red transition-colors">
+                            {{ blog.title }}
+                        </h3>
+                        <p class="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-4 flex-grow">
+                            {{ blog.body|truncatewords:20 }}
+                        </p>
+                        <div class="flex items-center gap-3 text-xs">
+                            <img src="https://ui-avatars.com/api/?name={{ blog.author }}&background=E3241C&color=fff" alt="Author" class="w-6 h-6 rounded-full">
+                            <span class="font-semibold text-gray-700">{{ blog.author }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <p class="text-2xl font-bold text-gray-500 mb-4">No blogs found</p>
+                <a href="{% url 'blog-list' %}" class="inline-flex items-center gap-2 text-amsun-red font-bold hover:text-amsun-black transition-colors">
+                    <i class="fas fa-redo"></i> Try again
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav class="flex justify-center items-center gap-2 mt-16">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                        Previous
+                    </a>
+                {% endif %}
+
+                <div class="flex gap-2">
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="px-4 py-2 rounded-lg bg-amsun-red text-white font-semibold">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                {{ num }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                        Next
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Newsletter Signup Section -->
+    <section class="py-16 px-4 bg-gradient-to-r from-amsun-black to-amsun-darkRed text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-amsun-red/10 rounded-full blur-[100px]"></div>
+        
+        <div class="container mx-auto max-w-4xl relative z-10">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
+                <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                    Subscribe to our newsletter to receive the latest blog posts and insights delivered to your inbox
+                </p>
+                
+                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-amsun-gold bg-white text-amsun-black placeholder-gray-500" required>
+                    <button type="submit" class="bg-amsun-gold text-amsun-black font-bold px-6 py-3 rounded-lg hover:bg-white transition-all duration-300 whitespace-nowrap">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Category Filter
+        document.getElementById('category-filter').addEventListener('change', function() {
+            const category = this.value;
+            // Placeholder for filtering logic
+            console.log('Filter by category:', category);
+        });
+    </script>
+{% endblock %}

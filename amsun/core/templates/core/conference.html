@@ -1,0 +1,716 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}16th AMSUN Scientific Conference 2026{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --orbit-radius: 140px;
+    }
+
+    @media (max-width: 1024px) {
+        :root {
+            --orbit-radius: 120px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        :root {
+            --orbit-radius: 95px;
+        }
+    }
+
+    @keyframes orbit-spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes orbit-counter-spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(-360deg);
+        }
+    }
+
+    @keyframes pulse-line {
+        0% {
+            left: 0%;
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            left: 100%;
+            opacity: 0;
+        }
+    }
+
+    /* Infinite Slider Animations */
+    @keyframes slide-left {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes slide-right {
+        0% {
+            transform: translateX(-50%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .animate-slide-left {
+        animation: slide-left 45s linear infinite;
+    }
+
+    .animate-slide-right {
+        animation: slide-right 45s linear infinite;
+    }
+
+    .hover-pause:hover {
+        animation-play-state: paused;
+    }
+
+    .hub-wheel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        animation: orbit-spin 40s linear infinite;
+    }
+
+    .hub-rings {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 1px dashed rgba(0, 0, 0, 0.1);
+        pointer-events: none;
+    }
+
+    .hub-rings.outer {
+        width: calc(var(--orbit-radius) * 2);
+        height: calc(var(--orbit-radius) * 2);
+    }
+
+    .hub-rings.inner {
+        width: calc(var(--orbit-radius) * 1.2);
+        height: calc(var(--orbit-radius) * 1.2);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .hub-interaction-zone:hover .hub-wheel,
+    .hub-interaction-zone:hover .counter-spinner {
+        animation-play-state: paused;
+    }
+
+    .hub-item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 70px;
+        margin-top: -35px;
+        margin-left: -50px;
+    }
+
+    @media (max-width: 640px) {
+        .hub-item {
+            width: 86px;
+            height: 62px;
+            margin-top: -31px;
+            margin-left: -43px;
+        }
+    }
+
+    .counter-spinner {
+        width: 100%;
+        height: 100%;
+        animation: orbit-counter-spin 40s linear infinite;
+        position: relative;
+        z-index: 10;
+    }
+
+    .connection-line {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        width: var(--orbit-radius);
+        height: 1px;
+        background: linear-gradient(90deg, rgba(227, 36, 28, 0) 0%, rgba(227, 36, 28, 0.2) 50%, rgba(227, 36, 28, 0) 100%);
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .connection-line::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        left: 0;
+        width: 6px;
+        height: 2px;
+        background: #e3241c;
+        box-shadow: 0 0 6px #e3241c;
+        border-radius: 50%;
+        animation: pulse-line 3s infinite linear;
+    }
+</style>
+
+<section class="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pt-28 pb-12 md:pt-36">
+    <video id="hero-video" autoplay loop muted playsinline class="absolute inset-0 z-0 w-full h-full object-cover">
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-r from-amsun-black/90 via-amsun-black/75 to-amsun-black/90 z-0"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-amsun-black/60 z-0"></div>
+
+    <div class="absolute inset-0 opacity-10 z-0 pointer-events-none">
+        <div
+            class="absolute top-10 left-10 w-64 md:w-80 h-64 md:h-80 bg-amsun-red rounded-full mix-blend-multiply filter blur-3xl animate-float">
+        </div>
+        <div class="absolute bottom-10 right-10 w-64 md:w-80 h-64 md:h-80 bg-amsun-purple rounded-full mix-blend-multiply filter blur-3xl animate-float"
+            style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto animate-fade-in-up w-full">
+        <div class="mb-3 md:mb-5 inline-block">
+            <span
+                class="px-3 md:px-4 py-1.5 rounded-[5px] bg-amsun-red/20 border border-amsun-red text-amsun-gold font-semibold text-[10px] md:text-xs uppercase tracking-widest">
+                The 16th Edition
+            </span>
+        </div>
+
+        <h1
+            class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white font-extrabold tracking-tight drop-shadow-2xl mb-3 md:mb-4 leading-tight">
+            AMSUN Scientific <span
+                class="bg-gradient-to-r from-amsun-gold via-amsun-red to-amsun-gold bg-clip-text text-transparent block sm:inline">Conference
+                2026</span>
+        </h1>
+
+        <div
+            class="w-16 md:w-20 h-1 bg-gradient-to-r from-amsun-red via-amsun-gold to-amsun-red mx-auto mb-5 md:mb-6 shadow-[0_0_15px_rgba(227,36,28,0.6)]">
+        </div>
+
+        <p
+            class="text-amsun-gold text-sm sm:text-base md:text-xl leading-relaxed max-w-3xl mx-auto mb-2 md:mb-3 font-bold uppercase tracking-widest">
+            Innovation and Sustainability in Health Care
+        </p>
+
+        <p class="text-gray-300 text-xs md:text-base max-w-2xl mx-auto mb-6 md:mb-8">
+            May 29-30, 2026 | University of Nairobi, Chiromo Campus
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center px-4 sm:px-0">
+            <a href="https://amsun-conference.vercel.app/" target="_blank"
+                class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-amsun-red text-white rounded-[5px] hover:bg-amsun-darkRed transition-all duration-300 font-bold text-xs md:text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 group">
+                <i class="fas fa-external-link-alt"></i> Registration & Portal
+            </a>
+            <a href="#submit-abstract"
+                class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-[5px] border border-white/20 hover:bg-white/20 hover:border-amsun-gold transition-all duration-300 font-bold text-xs md:text-sm hover:-translate-y-0.5">
+                Submission Details <i class="fas fa-arrow-down"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section
+    class="py-8 md:py-10 px-4 bg-gradient-to-r from-amsun-black via-amsun-black/95 to-amsun-black border-b border-amsun-red/20">
+    <div class="container mx-auto max-w-6xl">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div class="text-center">
+                <h3 class="text-2xl md:text-4xl font-bold text-amsun-gold mb-0.5">500+</h3>
+                <p class="text-gray-300 text-[10px] md:text-sm font-semibold uppercase tracking-wider">Delegates</p>
+            </div>
+            <div class="text-center">
+                <h3 class="text-2xl md:text-4xl font-bold text-amsun-red mb-0.5">2</h3>
+                <p class="text-gray-300 text-[10px] md:text-sm font-semibold uppercase tracking-wider">Action Days</p>
+            </div>
+            <div class="text-center">
+                <h3 class="text-2xl md:text-4xl font-bold text-amsun-gold mb-0.5">5</h3>
+                <p class="text-gray-300 text-[10px] md:text-sm font-semibold uppercase tracking-wider">Thematic Tracks
+                </p>
+            </div>
+            <div class="text-center">
+                <h3 class="text-2xl md:text-4xl font-bold text-amsun-red mb-0.5">1</h3>
+                <p class="text-gray-300 text-[10px] md:text-sm font-semibold uppercase tracking-wider">Innovation Goal
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="submit-abstract" class="py-12 md:py-16 px-4 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5 pointer-events-none">
+        <div class="absolute top-0 right-0 w-80 h-80 bg-amsun-red rounded-full mix-blend-multiply filter blur-3xl">
+        </div>
+    </div>
+    <div class="container mx-auto max-w-6xl relative z-10">
+        <div class="text-center mb-10 md:mb-12">
+            <span class="text-amsun-red font-bold text-[10px] uppercase tracking-widest mb-1.5 block">Call for
+                Submissions</span>
+            <h2 class="text-2xl md:text-4xl font-display font-bold text-amsun-black mb-2 leading-tight">
+                Abstracts & Pitch Decks
+            </h2>
+            <p class="text-xs md:text-sm text-gray-600 max-w-2xl mx-auto">
+                We invite medical students, researchers, and innovators to share their groundbreaking work in our
+                dual-format structure.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6">
+            <div class="bg-gray-50 rounded-[5px] p-5 md:p-6 border border-gray-200 shadow-sm h-full">
+                <h3 class="text-base md:text-lg font-bold text-amsun-black mb-3 flex items-center gap-2">
+                    <i class="fas fa-microscope text-amsun-red"></i> Day 1: Research Presentations
+                </h3>
+                <p class="text-gray-600 text-[11px] md:text-xs mb-3">May 29th is dedicated to high-quality,
+                    peer-reviewed scientific inquiry.</p>
+                <ul class="space-y-1.5 text-gray-700 text-[11px] md:text-xs mb-5">
+                    <li class="flex items-start gap-2"><i
+                            class="fas fa-check text-amsun-red mt-0.5"></i><span><strong>Format:</strong> Structured
+                            abstracts (Max 250 words).</span></li>
+                    <li class="flex items-start gap-2"><i
+                            class="fas fa-check text-amsun-red mt-0.5"></i><span><strong>Presentation:</strong> Oral or
+                            Poster.</span></li>
+                </ul>
+
+                <div class="w-full h-px bg-gray-200 my-4"></div>
+
+                <h3 class="text-base md:text-lg font-bold text-amsun-black mb-3 flex items-center gap-2">
+                    <i class="fas fa-lightbulb text-amsun-gold"></i> Day 2: Pitch Deck Presentations
+                </h3>
+                <p class="text-gray-600 text-[11px] md:text-xs mb-3">May 30th focuses on translating ideas into
+                    real-world healthcare entrepreneurship.</p>
+                <ul class="space-y-1.5 text-gray-700 text-[11px] md:text-xs">
+                    <li class="flex items-start gap-2"><i
+                            class="fas fa-check text-amsun-gold mt-0.5"></i><span><strong>Format:</strong> Slide deck
+                            submissions (PDF).</span></li>
+                    <li class="flex items-start gap-2"><i
+                            class="fas fa-check text-amsun-gold mt-0.5"></i><span><strong>Presentation:</strong> Live
+                            pitch to expert panelists.</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <div
+                    class="bg-gradient-to-br from-amsun-black to-gray-900 rounded-[5px] p-5 md:p-6 shadow-md h-full flex flex-col">
+                    <h3 class="text-base md:text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-calendar-alt text-amsun-gold"></i> Important Dates
+                    </h3>
+                    <div class="space-y-3 flex-grow">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700">
+                            <span class="font-bold text-gray-300 text-[11px] md:text-xs">Call Opens</span>
+                            <span class="text-amsun-red font-bold text-[11px] md:text-xs">Feb 10, 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700">
+                            <span class="font-bold text-gray-300 text-[11px] md:text-xs">Submission Deadline</span>
+                            <span class="text-amsun-red font-bold text-[11px] md:text-xs">Mar 31, 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700">
+                            <span class="font-bold text-gray-300 text-[11px] md:text-xs">Acceptance Notification</span>
+                            <span class="text-amsun-gold font-bold text-[11px] md:text-xs">Apr 15, 2026</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-1">
+                            <span class="font-bold text-white text-[11px] md:text-xs">Conference Dates</span>
+                            <span
+                                class="text-white font-bold text-[10px] md:text-[11px] bg-amsun-red px-2 py-0.5 rounded-[3px]">May
+                                29-30, 2026</span>
+                        </div>
+                    </div>
+                    <a href="https://amsun-conference.vercel.app/" target="_blank"
+                        class="mt-5 block w-full text-center px-4 py-3 bg-gradient-to-r from-amsun-red to-amsun-darkRed text-white rounded-[5px] hover:shadow-md transition-all duration-300 font-bold text-[11px] md:text-xs hover:-translate-y-0.5">
+                        <i class="fas fa-external-link-alt mr-1"></i> Open Submission Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 md:py-16 px-4 bg-[#FAFAFA] border-y border-gray-200 overflow-hidden">
+    <div class="container mx-auto max-w-6xl">
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+
+            <div class="w-full lg:w-5/12 text-center lg:text-left z-20">
+                <span
+                    class="inline-flex items-center justify-center lg:justify-start gap-1.5 text-amsun-red font-bold text-[10px] uppercase tracking-widest mb-2">
+                    <span class="w-1.5 h-1.5 rounded-sm bg-amsun-red animate-pulse"></span>
+                    Official Tracks
+                </span>
+                <h2 class="text-2xl md:text-4xl font-display font-black leading-tight mb-3 text-amsun-black">
+                    Conference<br>
+                    <span class="text-amsun-gold">Themes 2026</span>
+                </h2>
+                <p
+                    class="text-gray-600 text-xs md:text-sm leading-relaxed mb-5 lg:border-l-2 border-amsun-red/30 lg:pl-3 font-medium max-w-lg mx-auto lg:mx-0">
+                    All abstracts and pitch deck submissions must align with one of the five official sub-themes
+                    targeting innovation and sustainability in modern healthcare.
+                </p>
+                <a href="https://amsun-conference.vercel.app/" target="_blank"
+                    class="inline-flex bg-white text-amsun-black border border-gray-200 py-2 px-4 rounded-[5px] font-bold hover:border-amsun-red hover:text-amsun-red transition-all duration-300 shadow-sm text-xs group">
+                    View Full Track Details <i
+                        class="fas fa-arrow-right ml-1.5 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="w-full lg:w-7/12 relative h-[250px] md:h-[350px] mt-4 lg:mt-0 hub-interaction-zone">
+                <div
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 md:w-20 md:h-20 bg-white border-2 border-amsun-red rounded-full flex flex-col items-center justify-center shadow-lg">
+                    <span
+                        class="font-display font-black text-amsun-black text-[10px] md:text-xs text-center leading-none">2026<br><span
+                            class="text-[8px] md:text-[9px] text-amsun-red uppercase tracking-wider">Themes</span></span>
+                </div>
+
+                <div class="hub-rings outer"></div>
+                <div class="hub-rings inner"></div>
+
+                <div class="hub-wheel">
+
+                    <div class="hub-item" style="transform: rotate(0deg) translate(var(--orbit-radius));">
+                        <div class="connection-line" style="animation-delay: 0s;"></div>
+                        <div class="counter-spinner">
+                            <div class="flex items-center justify-center w-full h-full"
+                                style="transform: rotate(0deg);">
+                                <div
+                                    class="relative w-[86px] h-[62px] md:w-[105px] md:h-[72px] rounded-[5px] overflow-hidden shadow-md border border-gray-200 bg-white group cursor-default hover:border-amsun-red transition-all duration-300 flex flex-col items-center justify-center p-1.5">
+                                    <i
+                                        class="fas fa-laptop-medical text-amsun-red text-[16px] md:text-[18px] mb-0.5"></i>
+                                    <span
+                                        class="text-amsun-black font-bold text-[7.5px] md:text-[8.5px] leading-[1.1] text-center">Health
+                                        Systems<br>& Digital Health</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hub-item" style="transform: rotate(72deg) translate(var(--orbit-radius));">
+                        <div class="connection-line" style="animation-delay: -0.6s;"></div>
+                        <div class="counter-spinner">
+                            <div class="flex items-center justify-center w-full h-full"
+                                style="transform: rotate(-72deg);">
+                                <div
+                                    class="relative w-[86px] h-[62px] md:w-[105px] md:h-[72px] rounded-[5px] overflow-hidden shadow-md border border-gray-200 bg-white group cursor-default hover:border-amsun-red transition-all duration-300 flex flex-col items-center justify-center p-1.5">
+                                    <i class="fas fa-chart-line text-amsun-gold text-[16px] md:text-[18px] mb-0.5"></i>
+                                    <span
+                                        class="text-amsun-black font-bold text-[7.5px] md:text-[8.5px] leading-[1.1] text-center">Financial<br>Sustainability</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hub-item" style="transform: rotate(144deg) translate(var(--orbit-radius));">
+                        <div class="connection-line" style="animation-delay: -1.2s;"></div>
+                        <div class="counter-spinner">
+                            <div class="flex items-center justify-center w-full h-full"
+                                style="transform: rotate(-144deg);">
+                                <div
+                                    class="relative w-[86px] h-[62px] md:w-[105px] md:h-[72px] rounded-[5px] overflow-hidden shadow-md border border-gray-200 bg-white group cursor-default hover:border-amsun-red transition-all duration-300 flex flex-col items-center justify-center p-1.5">
+                                    <i class="fas fa-female text-amsun-purple text-[16px] md:text-[18px] mb-0.5"></i>
+                                    <span
+                                        class="text-amsun-black font-bold text-[7.5px] md:text-[8.5px] leading-[1.1] text-center">Women's
+                                        &<br>Maternal Health</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hub-item" style="transform: rotate(216deg) translate(var(--orbit-radius));">
+                        <div class="connection-line" style="animation-delay: -1.8s;"></div>
+                        <div class="counter-spinner">
+                            <div class="flex items-center justify-center w-full h-full"
+                                style="transform: rotate(-216deg);">
+                                <div
+                                    class="relative w-[86px] h-[62px] md:w-[105px] md:h-[72px] rounded-[5px] overflow-hidden shadow-md border border-gray-200 bg-white group cursor-default hover:border-amsun-red transition-all duration-300 flex flex-col items-center justify-center p-1.5">
+                                    <i class="fas fa-users text-blue-500 text-[16px] md:text-[18px] mb-0.5"></i>
+                                    <span
+                                        class="text-amsun-black font-bold text-[7.5px] md:text-[8.5px] leading-[1.1] text-center">Community
+                                        &<br>Preventive Care</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hub-item" style="transform: rotate(288deg) translate(var(--orbit-radius));">
+                        <div class="connection-line" style="animation-delay: -2.4s;"></div>
+                        <div class="counter-spinner">
+                            <div class="flex items-center justify-center w-full h-full"
+                                style="transform: rotate(-288deg);">
+                                <div
+                                    class="relative w-[86px] h-[62px] md:w-[105px] md:h-[72px] rounded-[5px] overflow-hidden shadow-md border border-gray-200 bg-white group cursor-default hover:border-amsun-red transition-all duration-300 flex flex-col items-center justify-center p-1.5">
+                                    <i class="fas fa-pills text-green-500 text-[16px] md:text-[18px] mb-0.5"></i>
+                                    <span
+                                        class="text-amsun-black font-bold text-[7.5px] md:text-[8.5px] leading-[1.1] text-center">Pharma
+                                        &<br>Biomedical Innov.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-10 md:py-12 bg-white overflow-hidden relative">
+    <div
+        class="absolute inset-y-0 left-0 w-12 md:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none">
+    </div>
+    <div
+        class="absolute inset-y-0 right-0 w-12 md:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none">
+    </div>
+
+    <div class="container mx-auto max-w-7xl px-4 mb-6 md:mb-8 text-center relative z-20">
+        <span class="text-amsun-red font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] mb-1.5 block">Moments in
+            Time</span>
+        <h2 class="text-2xl md:text-4xl font-display font-bold text-amsun-black">Conference Gallery</h2>
+        <div class="w-12 h-1 bg-amsun-red mx-auto rounded-full mt-3"></div>
+    </div>
+
+    <div class="relative w-full flex flex-col gap-3 md:gap-4 hover-pause">
+        <div class="flex w-max gap-3 md:gap-4 animate-slide-left">
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Conference Audience"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Networking"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Presentation"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Panel Discussion"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Exhibition"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Conference Audience"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Networking"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Presentation"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Panel Discussion"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Exhibition"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+        </div>
+
+        <div class="flex w-max gap-3 md:gap-4 animate-slide-right ml-[-150px]">
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Medical Students"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1576091160550-2187d6b3670f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Medical Research"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1588196749597-9ff04689e5ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Microscope"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Event Banner"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Team Work"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Medical Students"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1576091160550-2187d6b3670f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Medical Research"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1588196749597-9ff04689e5ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Microscope"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Event Banner"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[5px] overflow-hidden shadow-sm shrink-0">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Team Work"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-8 md:py-10 px-4 bg-white border-t border-gray-100">
+    <div class="container mx-auto max-w-3xl">
+        <div class="text-center mb-6 md:mb-8">
+            <h2 class="text-2xl md:text-3xl font-display font-bold text-amsun-black mb-1">Frequently Asked Questions
+            </h2>
+        </div>
+
+        <div class="space-y-2 md:space-y-3">
+            <details
+                class="group bg-gray-50 rounded-[5px] border border-gray-200 overflow-hidden hover:shadow-sm transition-shadow">
+                <summary
+                    class="flex cursor-pointer items-center justify-between p-3 md:p-4 font-bold text-xs md:text-sm text-amsun-black">
+                    <span>How do I submit my abstract or pitch deck?</span>
+                    <span class="transition-transform group-open:rotate-180 shrink-0 ml-3 text-amsun-red">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </summary>
+                <div class="px-3 md:px-4 pb-3 md:pb-4 text-gray-700 text-[11px] md:text-xs">
+                    <p>All submissions must be made through our dedicated conference portal. Click the "Registration &
+                        Portal" button on this page to be redirected to the secure submission form.</p>
+                </div>
+            </details>
+
+            <details
+                class="group bg-gray-50 rounded-[5px] border border-gray-200 overflow-hidden hover:shadow-sm transition-shadow">
+                <summary
+                    class="flex cursor-pointer items-center justify-between p-3 md:p-4 font-bold text-xs md:text-sm text-amsun-black">
+                    <span>Can I present both an abstract and a pitch deck?</span>
+                    <span class="transition-transform group-open:rotate-180 shrink-0 ml-3 text-amsun-red">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </summary>
+                <div class="px-3 md:px-4 pb-3 md:pb-4 text-gray-700 text-[11px] md:text-xs">
+                    <p>Yes. If you have a research abstract (for Day 1) and a distinct innovation/entrepreneurial pitch
+                        (for Day 2), you may submit both for review.</p>
+                </div>
+            </details>
+
+            <details
+                class="group bg-gray-50 rounded-[5px] border border-gray-200 overflow-hidden hover:shadow-sm transition-shadow">
+                <summary
+                    class="flex cursor-pointer items-center justify-between p-3 md:p-4 font-bold text-xs md:text-sm text-amsun-black">
+                    <span>Who can attend the conference?</span>
+                    <span class="transition-transform group-open:rotate-180 shrink-0 ml-3 text-amsun-red">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </summary>
+                <div class="px-3 md:px-4 pb-3 md:pb-4 text-gray-700 text-[11px] md:text-xs">
+                    <p>The conference is open to UoN students, students from other universities, healthcare
+                        professionals, international scholars, and industry partners.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<section
+    class="py-12 md:py-16 px-4 bg-gradient-to-r from-amsun-black via-amsun-black/95 to-amsun-black relative overflow-hidden border-t border-amsun-red/20">
+    <div class="absolute inset-0 opacity-5 pointer-events-none">
+        <div class="absolute top-0 left-0 w-80 h-80 bg-amsun-red rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-amsun-gold rounded-full mix-blend-multiply filter blur-3xl">
+        </div>
+    </div>
+
+    <div class="container mx-auto max-w-4xl relative z-10 text-center">
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-2 leading-tight">Ready to Showcase
+            Your Work?</h2>
+        <p class="text-xs md:text-sm text-gray-300 mb-5 md:mb-6 max-w-2xl mx-auto">
+            Join the 16th AMSUN Scientific Conference and be part of Africa's leading medical research and innovation
+            event.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-2.5 justify-center">
+            <a href="https://amsun-conference.vercel.app/" target="_blank"
+                class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto px-6 py-2.5 bg-amsun-red text-white rounded-[5px] hover:bg-amsun-darkRed transition-all duration-300 font-bold text-xs md:text-sm shadow-sm hover:-translate-y-0.5">
+                <i class="fas fa-external-link-alt"></i> Official Conference Portal
+            </a>
+        </div>
+
+        <div
+            class="mt-6 md:mt-8 text-[10px] md:text-xs text-gray-400 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
+            <span><i class="fas fa-user-tie text-amsun-gold mr-1"></i> Joel Masiaga: +254 740 757 662</span>
+            <span class="hidden md:inline">|</span>
+            <span><i class="fas fa-user-tie text-amsun-gold mr-1"></i> Jane Sibia: +254 794 605 089</span>
+            <span class="hidden md:inline">|</span>
+            <span><i class="fas fa-user-tie text-amsun-gold mr-1"></i> Paul Tibi: +254 759 572 692</span>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var video = document.getElementById("hero-video");
+        if (video) {
+            video.muted = true; // Required to bypass browser autoplay restrictions
+            var playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(function () {
+                    // Autoplay started!
+                    console.log("Hero video autoplay started successfully.");
+                }).catch(function (error) {
+                    // Autoplay was prevented.
+                    console.log("Autoplay was prevented by the browser:", error);
+                });
+            }
+        }
+    });
+</script>
+
+{% endblock %}
