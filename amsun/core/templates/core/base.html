@@ -160,6 +160,28 @@
                 min-height: 500px;
             }
         }
+
+        @media (max-width: 640px) {
+            html {
+                font-size: 106%;
+            }
+
+            .text-[10px] {
+                font-size: 11px !important;
+            }
+
+            .text-[9px] {
+                font-size: 10px !important;
+            }
+
+            .text-[8px] {
+                font-size: 9px !important;
+            }
+
+            .text-[11px] {
+                font-size: 12px !important;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -418,7 +440,7 @@
 
     <footer class="bg-amsun-black text-white pt-20 pb-10 border-t-4 border-amsun-gold relative">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 text-base">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-12 text-base">
                 <div>
                     <h4
                         class="text-white font-display font-bold mb-8 uppercase tracking-wider text-sm border-b border-white/10 pb-3 inline-block">
@@ -484,13 +506,13 @@
                         Stay Updated</h4>
                     <p class="text-sm text-gray-500 mb-6">Subscribe to our newsletter for the latest updates and
                         announcements.</p>
-                    <form class="flex gap-3 mb-8">
+                    <form class="flex flex-col sm:flex-row gap-3 mb-8">
                         <input type="email" placeholder="Your email address"
-                            class="flex-grow bg-white/5 border border-white/10 rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20">
+                            class="w-full sm:flex-grow bg-white/5 border border-white/10 rounded-lg px-3 py-3 text-sm focus:outline-none focus:border-amsun-red focus:ring-2 focus:ring-amsun-red/20">
                         <button
-                            class="bg-amsun-red text-white px-3 py-2 rounded-lg text-sm font-bold hover:bg-white hover:text-amsun-red transition-all duration-300">Subscribe</button>
+                            class="w-full sm:w-auto bg-amsun-red text-white px-4 py-3 rounded-lg text-sm font-bold hover:bg-white hover:text-amsun-red transition-all duration-300">Subscribe</button>
                     </form>
-                    <div class="flex gap-5">
+                    <div class="flex flex-wrap gap-4">
                         <a href="#"
                             class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:text-amsun-red"><i
                                 class="fab fa-twitter text-lg"></i></a>
@@ -511,9 +533,9 @@
             </div>
 
             <div
-                class="mt-16 pt-8 border-t border-white/10 flex flex-col lg:flex-row justify-between items-center text-sm text-gray-500">
-                <p>© 2026 AMSUN - Association of Medical Students, University of Nairobi. All Rights Reserved.</p>
-                <div class="flex gap-6 mt-4 lg:mt-0">
+                class="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 lg:flex-row justify-between items-start lg:items-center text-sm text-gray-500">
+                <p class="max-w-full">© 2026 AMSUN - Association of Medical Students, University of Nairobi. All Rights Reserved.</p>
+                <div class="flex flex-wrap gap-4 mt-2 lg:mt-0">
                     <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                     <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                     <a href="#" class="hover:text-white transition-colors">Accessibility</a>
