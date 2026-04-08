@@ -5,9 +5,9 @@
 
 {% block content %}
 <section class="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden pb-12 group">
-    <div class="absolute inset-0 z-0 bg-amsun-black">
+    <div class="absolute inset-0 z-0 bg-amsun-black" style="background-image: url('{% static 'core/logo.png' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
-        <video id="hero-video" autoplay loop muted playsinline class="w-full h-full object-cover opacity-80">
+        <video id="hero-video" autoplay loop muted playsinline preload="metadata" poster="{% static 'core/logo.png' %}" class="w-full h-full object-cover opacity-80">
             <source src="{% static 'core/amsun-hero-vid.mp4' %}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
