@@ -1,9 +1,23 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Blog, News, Events
+from django.utils import timezone
+from .models import Blog, News, Events, Research
 
 class HomeView(TemplateView):
     template_name = 'core/home.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = timezone.now()
+        
+        # Inject context for home.html
+        context['news_list'] = News.objects.all().order_by('-published_date')[:7]
+        context['upcoming_events'] = Events.objects.filter(date__gte=now.date()).order_by('date')[:5]
+        context['past_events'] = Events.objects.filter(date__lt=now.date()).order_by('-date')[:5]
+        context['research_articles'] = Research.objects.all().order_by('-published_date')[:4]
+        context['blog_posts'] = Blog.objects.all().order_by('-created_at')[:6]
+        
+        return context
 
 
 class BlogListView(ListView):

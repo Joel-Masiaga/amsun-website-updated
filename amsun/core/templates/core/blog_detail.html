@@ -7,7 +7,7 @@
     <!-- Article Header -->
     <section class="relative w-full h-[70vh] min-h-[600px] flex items-end justify-center overflow-hidden pt-24">
         <div class="absolute inset-0 z-0">
-            {% if blog.image %}
+            {% if blog.image and blog.image.name != 'default.jpg' %}
                 <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-full object-cover">
             {% else %}
                 <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Article Header" class="w-full h-full object-cover">
@@ -49,7 +49,7 @@
         <div class="container mx-auto max-w-3xl">
             <!-- Main Content -->
             <article class="prose prose-lg max-w-none mb-16">
-                {% if blog.image %}
+                {% if blog.image and blog.image.name != 'default.jpg' %}
                     <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full rounded-2xl shadow-lg mb-8">
                 {% endif %}
 
@@ -104,7 +104,7 @@
                     {% for related_blog in related_blogs %}
                     <a href="{% url 'blog-detail' pk=related_blog.pk %}" class="group bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-500 overflow-hidden border border-gray-100 hover:-translate-y-2 flex">
                         <div class="relative w-32 h-32 flex-shrink-0 overflow-hidden">
-                            {% if related_blog.image %}
+                            {% if related_blog.image and related_blog.image.name != 'default.jpg' %}
                                 <img src="{{ related_blog.image.url }}" alt="{{ related_blog.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             {% else %}
                                 <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Related" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">

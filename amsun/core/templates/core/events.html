@@ -84,7 +84,7 @@
         <div
             class="mb-8 md:mb-12 group relative rounded-[5px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-500 bg-white grid lg:grid-cols-5 border border-gray-100 h-auto lg:h-[320px]">
             <div class="lg:col-span-2 h-60 lg:h-full overflow-hidden relative">
-                {% if featured_event.image %}
+                {% if featured_event.image and featured_event.image.name != 'default.jpg' %}
                 <img src="{{ featured_event.image.url }}" alt="{{ featured_event.title }}"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 {% else %}
@@ -166,7 +166,7 @@
             <div
                 class="group bg-white rounded-[5px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:-translate-y-1 flex flex-col h-full">
                 <div class="relative h-40 md:h-48 overflow-hidden">
-                    {% if event.image %}
+                    {% if event.image and event.image.name != 'default.jpg' %}
                     <img src="{{ event.image.url }}" alt="{{ event.title }}"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                     {% else %}

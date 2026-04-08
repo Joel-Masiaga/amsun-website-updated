@@ -65,4 +65,15 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+        
+class Research(models.Model):
+    title = models.CharField(max_length=200)
+    authors = models.CharField(max_length=200)
+    journal = models.CharField(max_length=200)
+    abstract = models.TextField()
+    link = models.URLField(blank=True, null=True)
+    published_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
     
