@@ -96,12 +96,13 @@ class EventsListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Get the featured event (latest one)
-        context['featured_event'] = Events.objects.first()
+        now = timezone.now()
+        # Get the featured upcoming event
+        context['featured_event'] = Events.objects.filter(date__gte=now.date()).order_by('date').first()
         # Get all unique categories for the filter
         context['categories'] = Events.CATEGORY_CHOICES
-        # Get upcoming events (latest 5)
-        context['upcoming_events'] = Events.objects.all().order_by('date')[:5]
+        # Get upcoming events (earliest 5)
+        context['upcoming_events'] = Events.objects.filter(date__gte=now.date()).order_by('date')[:5]
         return context
     
     def get_queryset(self):
