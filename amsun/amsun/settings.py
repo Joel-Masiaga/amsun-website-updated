@@ -40,8 +40,82 @@ INSTALLED_APPS = [
 
     'core',
     'users',
+    'editorial',
+    'tinymce',
 
 ]
+
+LOGIN_URL = '/editorial/login/'
+
+# TinyMCE comprehensive configuration
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 500,
+    'width': '100%',
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'selector': 'textarea',
+    'theme': 'silver',
+    'plugins': (
+        'advlist autolink autosave link image lists charmap preview '
+        'anchor pagebreak searchreplace wordcount visualblocks '
+        'visualchars code fullscreen insertdatetime media nonbreaking '
+        'table emoticons template codesample directionality'
+    ),
+    'toolbar': (
+        'undo redo | formatselect | bold italic underline strikethrough | '
+        'forecolor backcolor | alignleft aligncenter alignright alignjustify | '
+        'bullist numlist outdent indent | link image media table codesample | '
+        'blockquote hr charmap emoticons | searchreplace fullscreen preview code'
+    ),
+    'toolbar_mode': 'wrap',
+    'menubar': 'file edit view insert format tools table help',
+    'autosave_ask_before_unload': True,
+    'autosave_interval': '30s',
+    'autosave_prefix': '{path}{query}-{id}-',
+    'autosave_restore_when_empty': False,
+    'autosave_retention': '2m',
+    'image_advtab': True,
+    'image_caption': True,
+    'image_title': True,
+    'automatic_uploads': True,
+    'file_picker_types': 'image',
+    'link_list': [],
+    'relative_urls': False,
+    'remove_script_host': False,
+    'convert_urls': True,
+    'branding': False,
+    'promotion': False,
+    'skin': 'oxide-dark',
+    'content_css': 'dark',
+    'statusbar': True,
+    'resize': True,
+    'elementpath': False,
+    'content_style': (
+        'body { font-family: Inter, sans-serif; font-size: 15px; '
+        'color: #1e293b; line-height: 1.75; max-width: 860px; margin: 0 auto; padding: 16px; }'
+        'h1,h2,h3,h4 { font-weight: 700; margin-top: 1.5em; }'
+        'p { margin-bottom: 1em; }'
+        'a { color: #dc2626; }'
+        'blockquote { border-left: 4px solid #dc2626; padding-left: 16px; color: #64748b; }'
+        'code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }'
+        'pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x:auto; }'
+        'img { max-width: 100%; height: auto; border-radius: 8px; }'
+        'table { border-collapse: collapse; width: 100%; }'
+        'table td, table th { border: 1px solid #e2e8f0; padding: 8px 12px; }'
+    ),
+    'formats': {
+        'alignleft': [{'selector': 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', 'classes': 'left'}],
+        'aligncenter': [{'selector': 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', 'classes': 'center'}],
+        'alignright': [{'selector': 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', 'classes': 'right'}],
+    },
+}
+
+TINYMCE_EXTRA_MEDIA = {
+    'css': {},
+    'js': [],
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

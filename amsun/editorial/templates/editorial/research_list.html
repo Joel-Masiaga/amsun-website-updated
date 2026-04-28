@@ -1,0 +1,71 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}Research — AMSUN Editorial{% endblock %}
+{% block page_title %}Research Articles{% endblock %}
+{% block breadcrumb %}Admin / Research{% endblock %}
+{% block nav_research %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:research-create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> New Article
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="section-header">
+    <div>
+      <div class="section-title">All Research Articles</div>
+      <p class="text-muted" style="font-size:12px;margin-top:3px;">{{ articles|length }} article{{ articles|length|pluralize }} total</p>
+    </div>
+  </div>
+
+  {% if articles %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th>Title</th>
+          <th>Authors</th>
+          <th>Journal</th>
+          <th>Published</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in articles %}
+        <tr>
+          <td class="td-muted">{{ forloop.counter }}</td>
+          <td>
+            <div style="font-weight:600;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ article.title }}</div>
+          </td>
+          <td class="td-muted" style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ article.authors }}</td>
+          <td><span class="badge badge-red">{{ article.journal }}</span></td>
+          <td class="td-muted">{{ article.published_date|date:"M d, Y" }}</td>
+          <td>
+            <div class="actions-cell">
+              <a href="{% url 'editorial:research-edit' article.pk %}" class="btn btn-edit btn-sm">
+                <i class="fas fa-pencil-alt"></i> Edit
+              </a>
+              <a href="{% url 'editorial:research-delete' article.pk %}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;">
+    <i class="fas fa-microscope" style="font-size:40px;color:#1f2d45;margin-bottom:12px;display:block;"></i>
+    <p style="color:#64748b;font-size:14px;">No research articles yet.</p>
+    <a href="{% url 'editorial:research-create' %}" class="btn btn-primary" style="margin-top:14px;">
+      <i class="fas fa-plus"></i> Add First Article
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

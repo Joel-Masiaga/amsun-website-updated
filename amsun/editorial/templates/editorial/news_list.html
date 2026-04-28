@@ -1,0 +1,85 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}News Articles — AMSUN Editorial{% endblock %}
+{% block page_title %}News Articles{% endblock %}
+{% block breadcrumb %}Content / News{% endblock %}
+{% block nav_news %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:news-create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> New Article
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="section-header">
+    <div>
+      <div class="section-title">All News Articles</div>
+      <p class="text-muted" style="font-size:12px;margin-top:3px;">{{ news|length }} article{{ news|length|pluralize }} total</p>
+    </div>
+  </div>
+
+  {% if news %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th style="width:50px;">Image</th>
+          <th>Headline</th>
+          <th>Author</th>
+          <th>Category</th>
+          <th>Published</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in news %}
+        <tr>
+          <td class="td-muted">{{ forloop.counter }}</td>
+          <td>
+            {% if item.image and item.image.name != 'default.jpg' %}
+              <img src="{{ item.image.url }}" class="img-thumb" alt="">
+            {% else %}
+              <div style="width:44px;height:44px;border-radius:6px;background:#1a2236;display:flex;align-items:center;justify-content:center;color:#475569;">
+                <i class="fas fa-newspaper"></i>
+              </div>
+            {% endif %}
+          </td>
+          <td>
+            <div style="font-weight:600;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ item.headline }}</div>
+          </td>
+          <td class="td-muted">{{ item.author }}</td>
+          <td>
+            {% if item.category %}
+              <span class="badge badge-blue">{{ item.get_category_display }}</span>
+            {% else %}<span class="td-muted">—</span>{% endif %}
+          </td>
+          <td class="td-muted">{{ item.published_date|date:"M d, Y" }}</td>
+          <td>
+            <div class="actions-cell">
+              <a href="{% url 'editorial:news-edit' item.pk %}" class="btn btn-edit btn-sm">
+                <i class="fas fa-pencil-alt"></i> Edit
+              </a>
+              <a href="{% url 'editorial:news-delete' item.pk %}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;">
+    <i class="fas fa-newspaper" style="font-size:40px;color:#1f2d45;margin-bottom:12px;display:block;"></i>
+    <p style="color:#64748b;font-size:14px;">No news articles yet.</p>
+    <a href="{% url 'editorial:news-create' %}" class="btn btn-primary" style="margin-top:14px;">
+      <i class="fas fa-plus"></i> Create First Article
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} User — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} User{% endblock %}
+{% block breadcrumb %}Administration / Users / {{ action }}{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:user-list' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to Users
+  </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:640px;">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;color:#f87171;">
+        <i class="fas fa-user-plus" style="margin-right:8px;"></i>{{ action }} Editorial User
+      </h2>
+
+      {% if form.non_field_errors %}
+        {% for e in form.non_field_errors %}
+        <div class="alert alert-error" style="margin-bottom:16px;">
+          <i class="fas fa-exclamation-circle"></i> {{ e }}
+        </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        {{ form.email }}
+        {% for e in form.email.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          {{ form.first_name }}
+          {% for e in form.first_name.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name }}
+          {% for e in form.last_name.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Role *</label>
+        {{ form.role }}
+        {% for e in form.role.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <hr class="divider">
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          {{ form.password }}
+          {% for e in form.password.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password *</label>
+          {{ form.password2 }}
+          {% for e in form.password2.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> Create User
+      </button>
+      <a href="{% url 'editorial:user-list' %}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} News Article — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} News Article{% endblock %}
+{% block breadcrumb %}Content / News / {{ action }}{% endblock %}
+{% block nav_news %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:news-list' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to News
+  </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:960px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;color:#a5b4fc;">
+        <i class="fas fa-newspaper" style="margin-right:8px;"></i>{{ action }} News Article
+      </h2>
+
+      <div class="form-group">
+        <label class="form-label">Headline *</label>
+        {{ form.headline }}
+        {% for e in form.headline.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Author *</label>
+          {{ form.author }}
+          {% for e in form.author.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Published Date *</label>
+          {{ form.published_date }}
+          {% for e in form.published_date.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        {{ form.category }}
+        {% for e in form.category.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Content *</label>
+        <div class="tinymce-wrap">
+          {{ form.content }}
+        </div>
+        {% for e in form.content.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cover Image</label>
+        {% if obj and obj.image and obj.image.name != 'default.jpg' %}
+          <div style="margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+            <img src="{{ obj.image.url }}" style="height:70px;width:auto;border-radius:8px;border:1px solid #1f2d45;">
+            <span style="font-size:12px;color:#64748b;">Current image — upload a new one to replace</span>
+          </div>
+        {% endif %}
+        {{ form.image }}
+        {% for e in form.image.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;align-items:center;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> {{ action }} Article
+      </button>
+      <a href="{% url 'editorial:news-list' %}" class="btn btn-ghost">Cancel</a>
+      {% if obj %}
+      <a href="{% url 'editorial:news-delete' obj.pk %}" class="btn btn-danger" style="margin-left:auto;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  <style>
+    .tox-tinymce { border-radius: 8px !important; border-color: #1f2d45 !important; }
+    .tinymce-wrap { border-radius: 8px; overflow: hidden; }
+  </style>
+{% endblock %}

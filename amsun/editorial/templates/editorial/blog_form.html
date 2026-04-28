@@ -1,0 +1,88 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} Blog Post — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} Blog Post{% endblock %}
+{% block breadcrumb %}Content / Blogs / {{ action }}{% endblock %}
+{% block nav_blogs %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:blog-list' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to Blogs
+  </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:960px;">
+  <form method="post" enctype="multipart/form-data" id="blog-form">
+    {% csrf_token %}
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;color:#f59e0b;">
+        <i class="fas fa-pen-nib" style="margin-right:8px;"></i>{{ action }} Blog Post
+      </h2>
+
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        {{ form.title }}
+        {% for e in form.title.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Author *</label>
+          {{ form.author }}
+          {% for e in form.author.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          {{ form.category }}
+          {% for e in form.category.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Content *</label>
+        <div class="tinymce-wrap">
+          {{ form.body }}
+        </div>
+        {% for e in form.body.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cover Image</label>
+        {% if obj and obj.image and obj.image.name != 'default.jpg' %}
+          <div style="margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+            <img src="{{ obj.image.url }}" style="height:70px;width:auto;border-radius:8px;border:1px solid #1f2d45;">
+            <span style="font-size:12px;color:#64748b;">Current image — upload a new one to replace</span>
+          </div>
+        {% endif %}
+        {{ form.image }}
+        {% for e in form.image.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;align-items:center;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> {{ action }} Post
+      </button>
+      <a href="{% url 'editorial:blog-list' %}" class="btn btn-ghost">Cancel</a>
+      {% if obj %}
+      <a href="{% url 'editorial:blog-delete' obj.pk %}" class="btn btn-danger" style="margin-left:auto;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  <style>
+    /* Override TinyMCE container to fit dark portal */
+    .tox-tinymce { border-radius: 8px !important; border-color: #1f2d45 !important; }
+    .tox .tox-toolbar__primary { background: #1a2236 !important; }
+    .tox-statusbar { background: #1a2236 !important; border-color: #1f2d45 !important; }
+    .tinymce-wrap { border-radius: 8px; overflow: hidden; }
+  </style>
+{% endblock %}

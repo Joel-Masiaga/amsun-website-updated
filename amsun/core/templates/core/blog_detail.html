@@ -54,7 +54,7 @@
                 {% endif %}
 
                 <div class="text-gray-700 leading-relaxed text-lg mb-6">
-                    {{ blog.body|linebreaks }}
+                    {{ blog.body|safe }}
                 </div>
             </article>
 

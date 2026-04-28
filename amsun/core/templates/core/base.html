@@ -69,7 +69,9 @@
         }
     </script>
     <style>
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -299,20 +301,38 @@
                         class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}">Leadership
                         <span
                             class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
-                    <a href="#" class="nav-item group relative pb-1 transition-colors duration-300">Clubs <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
-                    <a href="#" class="nav-item group relative pb-1 transition-colors duration-300">Resources <span
-                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+                    <div class="relative group">
+                        <button
+                            class="nav-item group-hover:text-amsun-red relative pb-1 transition-colors duration-300 flex items-center gap-1 {% if request.resolver_match.url_name == 'blog-list' or request.resolver_match.url_name == 'gazette' %}active{% endif %}">
+                            Resources <i
+                                class="fas fa-chevron-down text-[10px] mt-0.5 transition-transform duration-300 group-hover:rotate-180"></i>
+                            <span
+                                class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-[5px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50 border border-gray-100">
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amsun-red hover:pl-5 transition-all duration-300 font-medium">Clubs</a>
+                            <a href="{% url 'blog-list' %}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amsun-red hover:pl-5 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'blog-list' %}text-amsun-red{% endif %}">Blogs</a>
+                            <a href="{% url 'gazette' %}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amsun-red hover:pl-5 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'gazette' %}text-amsun-red{% endif %}">AMSUN
+                                Gazette</a>
+                        </div>
+                    </div>
                     <a href="{% url 'conference' %}"
                         class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'conference' %}active{% endif %}">Scientific
                         Conference <span
                             class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
-                    <a href="{% url 'blog-list' %}"
-                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'blog-list' %}active{% endif %}">Blogs<span
+                    <a href="{% url 'finalists_dinner' %}"
+                        class="nav-item group relative pb-1 transition-colors duration-300 {% if request.resolver_match.url_name == 'finalists_dinner' %}active{% endif %}">Finalists'
+                        Dinner <span
                             class="absolute bottom-0 left-0 w-0 h-0.5 bg-amsun-gold transition-all duration-300 group-hover:w-full"></span></a>
+
                     <a href="#"
                         class="bg-amsun-red hover:bg-white hover:text-amsun-red text-white text-sm px-6 py-2 rounded-[5px] font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_15px_rgba(227,36,28,0.5)] ml-2 flex items-center gap-2">
-                        Donate <i class="fas fa-hand-holding-heart"></i>
+                        Support <i class="fas fa-hand-holding-heart"></i>
                     </a>
                 </nav>
             </div>
@@ -339,13 +359,24 @@
                     class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'news-list' %}text-amsun-red pl-2{% endif %}">News</a>
                 <a href="{% url 'leadership' %}"
                     class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'leadership' %}text-amsun-red pl-2{% endif %}">Leadership</a>
-                <a href="#"
-                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2">Clubs</a>
-                <a href="#"
-                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2">Resources</a>
+                <div class="border-b border-gray-100 pb-2">
+                    <span
+                        class="block font-bold text-gray-400 uppercase text-[10px] tracking-wider mb-2 mt-1">Resources</span>
+                    <div class="pl-4 space-y-3">
+                        <a href="#" class="block hover:text-amsun-red hover:pl-2 transition-all text-sm">Clubs</a>
+                        <a href="{% url 'blog-list' %}"
+                            class="block hover:text-amsun-red hover:pl-2 transition-all text-sm {% if request.resolver_match.url_name == 'blog-list' %}text-amsun-red pl-2{% endif %}">Blogs</a>
+                        <a href="{% url 'gazette' %}"
+                            class="block hover:text-amsun-red hover:pl-2 transition-all text-sm {% if request.resolver_match.url_name == 'gazette' %}text-amsun-red pl-2{% endif %}">AMSUN
+                            Gazette</a>
+                    </div>
+                </div>
                 <a href="{% url 'conference' %}"
-                    class="block hover:text-amsun-red hover:pl-2 transition-all {% if request.resolver_match.url_name == 'conference' %}text-amsun-red pl-2{% endif %}">Scientific
+                    class="block hover:text-amsun-red hover:pl-2 transition-all border-b border-gray-100 pb-2 {% if request.resolver_match.url_name == 'conference' %}text-amsun-red pl-2{% endif %}">Scientific
                     Conference</a>
+                <a href="{% url 'finalists_dinner' %}"
+                    class="block hover:text-amsun-red hover:pl-2 transition-all {% if request.resolver_match.url_name == 'finalists_dinner' %}text-amsun-red pl-2{% endif %}">Finalists'
+                    Dinner</a>
 
                 <div class="flex flex-row justify-center gap-6 pt-4 mt-2 border-t border-gray-100">
                     <a href="{% url 'home' %}"
@@ -409,11 +440,11 @@
                     </div>
 
                     <div
-                        class="w-full h-64 md:h-96 rounded-[5px] overflow-hidden shadow-md border border-gray-200 group">
+                        class="w-full h-64 md:h-96 rounded-[5px] overflow-hidden shadow-md border border-gray-200 group relative bg-gray-100">
                         <iframe id="map-frame"
-                            src="https://maps.google.com/maps?q=Kenyatta+National+Hospital&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                            class="grayscale group-hover:grayscale-0 transition duration-700"></iframe>
+                            data-src="https://maps.google.com/maps?q=Kenyatta+National+Hospital&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            class="absolute inset-0 w-full h-full grayscale group-hover:grayscale-0 transition duration-700"
+                            style="border:0;" allowfullscreen=""></iframe>
                     </div>
 
                     <div
@@ -534,8 +565,11 @@
 
             <div
                 class="mt-16 pt-8 border-t border-white/10 flex flex-col gap-4 lg:flex-row justify-between items-start lg:items-center text-sm text-gray-500">
-                <p class="max-w-full">© 2026 AMSUN - Association of Medical Students, University of Nairobi. All Rights Reserved.</p>
+                <p class="max-w-full">© 2026 AMSUN - Association of Medical Students, University of Nairobi. All Rights
+                    Reserved.</p>
                 <div class="flex flex-wrap gap-4 mt-2 lg:mt-0">
+                    <a href="{% url 'editorial:login' %}" class="hover:text-white transition-colors text-amsun-gold"><i
+                            class="fas fa-lock text-xs mr-1"></i> Editorial Portal</a>
                     <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                     <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                     <a href="#" class="hover:text-white transition-colors">Accessibility</a>
@@ -544,8 +578,8 @@
             </div>
 
             <div class="mt-8 pt-4 border-t border-white/5 text-center">
-                <p class="text-xs text-gray-400">Built by <span class="text-gray-400 font-medium">Kuza Digital
-                        Solutions</span></p>
+                <p class="text-xs text-gray-400">Built by <span class="text-gray-400 font-medium">Joel Masiaga
+                    </span></p>
             </div>
 
         </div>
@@ -663,6 +697,7 @@
             const mapContainer = document.getElementById('map-container');
             const mapIcon = document.getElementById('map-icon');
             const mapText = document.getElementById('map-text');
+            const frame = document.getElementById('map-frame');
 
             if (mapContainer.classList.contains('max-h-0')) {
                 // Open
@@ -670,6 +705,13 @@
                 mapContainer.classList.add('max-h-[800px]', 'opacity-100');
                 mapIcon.classList.add('rotate-180');
                 mapText.textContent = "Hide Map";
+
+                // Wait for the 500ms CSS transition to finish so Google Maps calculates its height correctly
+                if (!frame.getAttribute('src')) {
+                    setTimeout(() => {
+                        frame.setAttribute('src', frame.getAttribute('data-src'));
+                    }, 500);
+                }
             } else {
                 // Close
                 mapContainer.classList.remove('max-h-[800px]', 'opacity-100');

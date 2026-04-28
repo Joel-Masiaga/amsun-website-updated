@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}AMSUN Gazette{% endblock %}
+
+{% block content %}
+<section class="pt-32 pb-20 md:pt-48 md:pb-32 bg-amsun-black text-center px-4">
+    <div class="container mx-auto">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6">
+            AMSUN <span class="text-amsun-gold">Gazette</span>
+        </h1>
+        <p class="text-gray-300 max-w-2xl mx-auto text-lg mb-8">
+            The official newsletter and publication of the Association of Medical Students of the University of Nairobi.
+        </p>
+        <div class="inline-flex items-center gap-2 bg-white/10 text-white px-6 py-3 rounded-[5px] border border-white/20">
+            <i class="fas fa-clock"></i> First Issue Coming Soon
+        </div>
+    </div>
+</section>
+{% endblock %}

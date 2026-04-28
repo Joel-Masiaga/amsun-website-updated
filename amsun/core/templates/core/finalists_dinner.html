@@ -1,0 +1,692 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}AMSUN Finalists' Dinner 2026{% endblock %}
+
+{% block content %}
+<style>
+    .pendulum-container {
+        position: absolute;
+        top: -10px;
+        right: 0.25rem;
+        transform-origin: top center;
+        animation: swing 4s infinite ease-in-out;
+        z-index: 50;
+        perspective: 1000px;
+    }
+
+    @media (max-width: 768px) {
+        .pendulum-container {
+            right: 50%;
+            margin-right: -80px;
+            top: -10px;
+        }
+    }
+
+    .pendulum-string {
+        width: 2px;
+        height: 120px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.9));
+        margin: 0 auto;
+    }
+
+    .pendulum-pin {
+        width: 14px;
+        height: 14px;
+        background: #f59e0b;
+        border-radius: 50%;
+        margin: 0 auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        border: 2px solid #fff;
+    }
+
+    .pendulum-card-wrapper {
+        width: 160px;
+        height: 220px;
+        margin: 0 auto;
+        transform-style: preserve-3d;
+        animation: flip-sides 10s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        margin-top: -10px;
+    }
+
+    .pendulum-card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .pendulum-front {
+        background: linear-gradient(135deg, rgba(11, 17, 32, 0.95), rgba(30, 41, 59, 0.85));
+        backdrop-filter: blur(10px);
+    }
+
+    .pendulum-back {
+        background: linear-gradient(135deg, rgba(227, 36, 28, 0.95), rgba(153, 27, 27, 0.85));
+        backdrop-filter: blur(10px);
+        transform: rotateY(180deg);
+    }
+
+    @keyframes swing {
+
+        0%,
+        100% {
+            transform: rotate(7deg);
+        }
+
+        50% {
+            transform: rotate(-7deg);
+        }
+    }
+
+    @keyframes flip-sides {
+
+        0%,
+        40% {
+            transform: rotateY(0deg);
+        }
+
+        50%,
+        90% {
+            transform: rotateY(180deg);
+        }
+
+        100% {
+            transform: rotateY(360deg);
+        }
+    }
+
+    .hole-punch {
+        width: 14px;
+        height: 14px;
+        background: #000;
+        border-radius: 50%;
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    }
+
+    .slider-container {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        border-radius: 12px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .slider-track {
+        display: flex;
+        width: 400%;
+        animation: slide-gallery 16s infinite cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slider-track img {
+        width: 25%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @keyframes slide-gallery {
+
+        0%,
+        20% {
+            transform: translateX(0);
+        }
+
+        25%,
+        45% {
+            transform: translateX(-25%);
+        }
+
+        50%,
+        70% {
+            transform: translateX(-50%);
+        }
+
+        75%,
+        95% {
+            transform: translateX(-75%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    /* Infinite Slider Animations */
+    @keyframes slide-left {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes slide-right {
+        0% {
+            transform: translateX(-50%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .animate-slide-left {
+        animation: slide-left 45s linear infinite;
+    }
+
+    .animate-slide-right {
+        animation: slide-right 45s linear infinite;
+    }
+
+    .hover-pause:hover {
+        animation-play-state: paused;
+    }
+</style>
+<!-- Hero Section (Center Aligned) -->
+<section
+    class="relative pt-32 pb-12 md:pt-40 md:pb-16 overflow-hidden bg-amsun-black flex flex-col items-center text-center">
+    <!-- Background Video with Overlay -->
+    <div class="absolute inset-0 z-0 bg-amsun-black">
+        <!-- The user can replace this placeholder src with their own video file -->
+        <video autoplay loop muted playsinline
+            class="w-full h-full object-cover object-center opacity-40 mix-blend-luminosity">
+            <source src="{% static 'core/amsun-hero-vid.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-b from-amsun-black/60 via-amsun-black/80 to-amsun-black"></div>
+    </div>
+
+    <div class="container relative z-10 px-4 max-w-4xl mx-auto flex flex-col items-center">
+        <!-- Title & Subtitle -->
+        <div
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6 animate-fade-in-up">
+            <span class="w-1.5 h-1.5 rounded-full bg-amsun-gold animate-pulse"></span>
+            <span class="text-[10px] md:text-xs font-bold text-white uppercase tracking-widest">Graduating Class of
+                2026</span>
+        </div>
+
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 animate-fade-in-up"
+            style="animation-delay: 0.1s;">
+            Finalists' <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-amsun-gold to-yellow-200">Dinner</span>
+        </h1>
+
+        <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto mb-8 animate-fade-in-up font-light leading-relaxed"
+            style="animation-delay: 0.2s;">
+            A formal and memorable platform for the graduating class to celebrate their academic achievements and
+            transition into the medical profession. Join us for a night of reflection, mentorship, and celebration.
+        </p>
+
+        <div class="flex flex-wrap gap-4 justify-center animate-fade-in-up mb-8" style="animation-delay: 0.3s;">
+            <a href="#"
+                class="bg-amsun-gold text-amsun-black px-8 py-3 rounded-[5px] text-sm font-bold hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.3)] transform hover:-translate-y-1">
+                RSVP Now
+            </a>
+            <a href="#about"
+                class="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-[5px] text-sm font-bold hover:bg-white hover:text-amsun-black transition-all duration-300 transform hover:-translate-y-1">
+                Discover More
+            </a>
+        </div>
+
+        <!-- Pendulum VIP Ticket -->
+        <div class="pendulum-container">
+            <div class="pendulum-pin"></div>
+            <div class="pendulum-string"></div>
+            <div class="pendulum-card-wrapper">
+                <!-- Front Side: Date -->
+                <div class="pendulum-card-face pendulum-front">
+                    <div class="hole-punch"></div>
+                    <i class="far fa-calendar-alt text-amsun-gold text-3xl mb-3 mt-4"></i>
+                    <p class="text-amsun-gold text-[10px] font-bold uppercase tracking-widest mb-2">Save the Date</p>
+                    <p class="text-white text-base font-bold leading-tight">Fri, 4th Sept<br><span
+                            class="text-xl">2026</span></p>
+                    <div class="w-8 h-0.5 bg-white/20 mt-4"></div>
+                </div>
+                <!-- Back Side: Venue -->
+                <div class="pendulum-card-face pendulum-back">
+                    <div class="hole-punch"></div>
+                    <i class="fas fa-map-marker-alt text-amsun-gold text-3xl mb-3 mt-4"></i>
+                    <p class="text-white/80 text-[10px] font-bold uppercase tracking-widest mb-2">The Venue</p>
+                    <p class="text-white text-base font-bold leading-tight">Ole Sereni<br><span
+                            class="text-amsun-gold">Hotel</span></p>
+                    <div class="w-8 h-0.5 bg-white/20 mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content Area -->
+<section id="about" class="py-12 md:py-16 bg-white relative">
+    <div class="container mx-auto px-4 max-w-6xl">
+
+        <!-- Section 1: About + Mini Gallery -->
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 mb-12">
+
+            <!-- Left: Text -->
+            <div class="lg:w-1/2">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <div class="w-10 h-0.5 bg-amsun-red"></div>
+                    <span class="text-amsun-red font-bold tracking-widest uppercase text-xs">The Culmination</span>
+                </div>
+                <h2 class="text-2xl md:text-4xl font-extrabold mb-4 text-amsun-black leading-tight">About the Dinner
+                </h2>
+
+                <div class="text-sm md:text-base text-gray-600 leading-relaxed font-light space-y-4">
+                    <p>
+                        The Association of Medical Students of the University of Nairobi (AMSUN) organizes the
+                        Finalists' Dinner annually to mark the culmination of the medical training journey for
+                        graduating MBChB students.
+                    </p>
+                    <p>
+                        The dinner provides a formal and memorable platform for the graduating class to celebrate their
+                        academic achievements, share fond memories of their school journey, while symbolizing the
+                        transition of these young doctors into the medical profession.
+                    </p>
+                    <p>
+                        It creates a unique opportunity for graduating doctors to build networks that support their
+                        transition into professional practice, connecting with faculty members, healthcare
+                        professionals, alumni, and industry partners.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: Elegant Sliding Gallery -->
+            <div class="lg:w-1/2 w-full">
+                <div class="slider-container h-64 md:h-[400px]">
+                    <div class="slider-track h-full">
+                        <img src="{% static 'core/conference/conference-pic-2.jpg' %}" alt="Previous Dinner Networking">
+                        <img src="{% static 'core/conference/conference-pic-8.jpg' %}" alt="Previous Dinner Panel">
+                        <img src="{% static 'core/conference/conference-pic-12.jpg' %}"
+                            alt="Previous Dinner Celebration">
+                        <img src="{% static 'core/conference/conference-pic-10.jpg' %}" alt="Previous Dinner Group">
+                    </div>
+                    <!-- Elegant Overlay Label -->
+                    <div
+                        class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 flex items-end">
+                        <div class="inline-flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amsun-gold"></span>
+                            <p class="text-white font-bold text-sm tracking-wider uppercase">Memories from Past Dinners
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Section 1 -->
+    </div>
+</section>
+
+<!-- Section 2: Full Width Gallery 1 (Moments) -->
+<section class="py-10 md:py-12 bg-gray-100 overflow-hidden relative border-y border-gray-200 shadow-inner">
+    <div
+        class="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-gray-100 to-transparent z-10 pointer-events-none">
+    </div>
+    <div
+        class="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-gray-100 to-transparent z-10 pointer-events-none">
+    </div>
+
+    <div class="container mx-auto max-w-6xl px-4 mb-6 md:mb-8 text-center relative z-20">
+        <h2 class="text-2xl md:text-4xl font-extrabold text-amsun-black mb-3">Moments to Remember</h2>
+        <p class="text-sm md:text-base text-gray-500 font-medium max-w-2xl mx-auto">Capturing the joy, resilience, and
+            camaraderie of our graduating medical classes across the years.</p>
+        <div class="w-12 h-1 bg-amsun-red mx-auto rounded-full mt-5"></div>
+    </div>
+
+    <!-- The Infinite Slider -->
+    <div class="relative w-full flex flex-col gap-3 md:gap-4 hover-pause">
+        <div class="flex w-max gap-3 md:gap-4 animate-slide-left">
+            <!-- First set -->
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-1.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-3.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-11.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-4.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-9.jfif' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <!-- Duplicate for infinite effect -->
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-1.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-3.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-11.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-4.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-9.jfif' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+        </div>
+
+        <div class="flex w-max gap-3 md:gap-4 animate-slide-right ml-[-150px]">
+            <!-- First set -->
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-6.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-13.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-15.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-17.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-20.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <!-- Duplicate for infinite effect -->
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-6.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-13.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-15.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-17.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+            <div class="w-56 h-36 md:w-72 md:h-48 rounded-[8px] overflow-hidden shadow-md shrink-0">
+                <img src="{% static 'core/conference/conference-pic-20.jpg' %}"
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    alt="Gallery Image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 md:py-16 bg-white relative">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <!-- Section 3: Purpose & Objectives -->
+        <div
+            class="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12 mb-12 bg-gray-50 rounded-[20px] p-6 md:p-8 border border-gray-100 shadow-sm">
+
+            <!-- Left: Image -->
+            <div class="lg:w-5/12 w-full">
+                <div class="relative rounded-[12px] overflow-hidden shadow-xl h-80 group">
+                    <img src="{% static 'core/conference/conference-pic-20.jpg' %}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        alt="Mentorship">
+                    <div class="absolute inset-0 bg-amsun-gold/20 mix-blend-multiply"></div>
+                </div>
+            </div>
+
+            <!-- Right: Text & Bullets -->
+            <div class="lg:w-7/12">
+                <div class="inline-flex items-center gap-3 mb-4">
+                    <span class="text-amsun-gold font-bold tracking-widest uppercase text-xs">Objectives</span>
+                    <div class="w-10 h-0.5 bg-amsun-gold"></div>
+                </div>
+                <h2 class="text-2xl md:text-4xl font-extrabold mb-6 text-amsun-black leading-tight">The Purpose</h2>
+
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-award text-amsun-gold text-[11px]"></i>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-700 font-light leading-relaxed">Celebrate the
+                            achievements and resilience of the graduating MBChB Class of 2026.</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-user-md text-amsun-gold text-[11px]"></i>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-700 font-light leading-relaxed">Provide mentorship and
+                            professional guidance as students transition into clinical practice.</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-star text-amsun-gold text-[11px]"></i>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-700 font-light leading-relaxed">Recognize academic
+                            excellence, leadership, and outstanding contributions among students.</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-handshake text-amsun-gold text-[11px]"></i>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-700 font-light leading-relaxed">Strengthen
+                            collaboration between graduating doctors and healthcare stakeholders, providing a platform
+                            for partners to share their vision.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Section 3 -->
+
+        <!-- Call to Action: Partnership -->
+        <div
+            class="bg-amsun-black text-white rounded-[10px] md:rounded-[20px] p-8 md:p-12 text-center relative overflow-hidden shadow-2xl border-t-4 border-amsun-red">
+            <!-- Background Elements -->
+            <div class="absolute inset-0 opacity-10">
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-amsun-red rounded-full blur-3xl -translate-y-1/2 translate-x-1/3">
+                </div>
+                <div
+                    class="absolute bottom-0 left-0 w-64 h-64 bg-amsun-gold rounded-full blur-3xl translate-y-1/2 -translate-x-1/3">
+                </div>
+            </div>
+
+            <div class="relative z-10">
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-white/10 text-amsun-gold text-[10px] font-bold uppercase tracking-widest mb-4 border border-white/10">Sponsorship
+                    Opportunities</span>
+                <h3 class="text-2xl md:text-4xl font-extrabold mb-4">Partner With Us</h3>
+                <p class="text-gray-300 text-sm md:text-base max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+                    Are you looking to engage with the brightest young medical minds in Kenya? Partner with us for the
+                    Finalists' Dinner to position your brand among the next generation of healthcare leaders.
+                </p>
+                <button onclick="openModal()"
+                    class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-amsun-red text-white px-6 py-3 rounded-[5px] text-xs md:text-sm font-bold hover:bg-white hover:text-amsun-red transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    View Partnership Packages <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partnership Modal -->
+<div id="partnership-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="absolute inset-0 bg-amsun-black/80 backdrop-blur-sm modal-overlay cursor-pointer" onclick="closeModal()"></div>
+    <div class="bg-white rounded-[16px] w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl border-t-4 border-amsun-gold animate-fade-in-up flex flex-col">
+        
+        <!-- Modal Header -->
+        <div class="sticky top-0 bg-white/95 backdrop-blur-md z-20 border-b border-gray-100 p-4 md:p-5 flex items-center justify-between shrink-0">
+            <div>
+                <h3 class="text-xl md:text-2xl font-display font-extrabold text-amsun-black">Sponsorship Packages</h3>
+                <p class="text-amsun-red text-[10px] font-bold uppercase tracking-widest mt-0.5">Finalists' Dinner 2026</p>
+            </div>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-amsun-red hover:text-white transition-colors duration-300">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="p-4 md:p-6 flex-grow">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Diamond Sponsor -->
+                <div class="border border-[#4A90E2] rounded-[10px] p-4 md:p-5 relative overflow-hidden group hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-[#4A90E2]/10 rounded-full blur-xl -translate-y-1/2 translate-x-1/3"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3 border-b border-[#4A90E2]/20 pb-3">
+                        <h4 class="text-lg md:text-xl font-bold text-[#4A90E2] font-display">Diamond Sponsor</h4>
+                        <div class="text-right">
+                            <span class="text-[#4A90E2] font-bold text-[10px] uppercase leading-none block">Ksh.</span>
+                            <div class="text-xl md:text-2xl font-display font-black text-[#0B1120] leading-none tracking-tight">500,000</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-1.5 text-xs md:text-[13px] text-gray-700 flex-grow">
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>Recognition as a premium sponsor of the dinner.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>30 minutes presentation by senior director.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>5 complimentary dinner invites.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>Pre-event promotion on social media via posts.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>On-site promotion of the sponsor (two banners).</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>Priority exhibition space.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>Exclusive award branding.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[#4A90E2] mt-1 text-[5px]"></i><span>Certificate of appreciation.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Platinum Sponsor -->
+                <div class="border border-gray-600 rounded-[10px] p-4 md:p-5 relative overflow-hidden group hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gray-600/10 rounded-full blur-xl -translate-y-1/2 translate-x-1/3"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3 border-b border-gray-200 pb-3">
+                        <h4 class="text-lg md:text-xl font-bold text-gray-700 font-display">Platinum Sponsor</h4>
+                        <div class="text-right">
+                            <span class="text-gray-500 font-bold text-[10px] uppercase leading-none block">Ksh.</span>
+                            <div class="text-xl md:text-2xl font-display font-black text-[#0B1120] leading-none tracking-tight">350,000</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-1.5 text-xs md:text-[13px] text-gray-700 flex-grow">
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>Recognition as a premium sponsor of the dinner.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>15 minute speaker address by senior director.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>4 complimentary dinner invites.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>On-site promotion of the sponsor (one banner).</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>2nd priority exhibition space.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>Exclusive award branding.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-600 mt-1 text-[5px]"></i><span>Certificate of appreciation.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Gold Sponsor -->
+                <div class="border border-amsun-gold rounded-[10px] p-4 md:p-5 relative overflow-hidden group hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amsun-gold/10 rounded-full blur-xl -translate-y-1/2 translate-x-1/3"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3 border-b border-amsun-gold/20 pb-3">
+                        <h4 class="text-lg md:text-xl font-bold text-amsun-gold font-display">Gold Sponsor</h4>
+                        <div class="text-right">
+                            <span class="text-amsun-gold font-bold text-[10px] uppercase leading-none block">Ksh.</span>
+                            <div class="text-xl md:text-2xl font-display font-black text-[#0B1120] leading-none tracking-tight">250,000</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-1.5 text-xs md:text-[13px] text-gray-700 flex-grow">
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-amsun-gold mt-1 text-[5px]"></i><span>Recognition as a premium sponsor of the dinner.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-amsun-gold mt-1 text-[5px]"></i><span>Exclusive award branding.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-amsun-gold mt-1 text-[5px]"></i><span>Opportunity for a brief presentation (5 minutes).</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-amsun-gold mt-1 text-[5px]"></i><span>3 complimentary dinner invitations.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-amsun-gold mt-1 text-[5px]"></i><span>Certificate of appreciation.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Silver Sponsor -->
+                <div class="border border-gray-400 rounded-[10px] p-4 md:p-5 relative overflow-hidden group hover:shadow-md transition-shadow bg-white flex flex-col h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-gray-400/20 rounded-full blur-xl -translate-y-1/2 translate-x-1/3"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3 border-b border-gray-200 pb-3">
+                        <h4 class="text-lg md:text-xl font-bold text-gray-500 font-display">Silver Sponsor</h4>
+                        <div class="text-right">
+                            <span class="text-gray-500 font-bold text-[10px] uppercase leading-none block">Ksh.</span>
+                            <div class="text-xl md:text-2xl font-display font-black text-[#0B1120] leading-none tracking-tight">150,000</div>
+                        </div>
+                    </div>
+                    <ul class="space-y-1.5 text-xs md:text-[13px] text-gray-700 flex-grow">
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-400 mt-1 text-[5px]"></i><span>Recognition as a sponsor of the dinner.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-400 mt-1 text-[5px]"></i><span>Company logo on event banners and posters.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-400 mt-1 text-[5px]"></i><span>2 complimentary dinner invitations.</span></li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-gray-400 mt-1 text-[5px]"></i><span>Certificate of appreciation.</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="text-center mt-6 pt-5 border-t border-gray-100">
+                <p class="text-xs md:text-sm text-gray-600 mb-3">For inquiries and customized sponsorship packages, please contact our organizing committee.</p>
+                <a href="mailto:amsun@uonbi.ac.ke" class="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-amsun-black text-white px-6 py-2.5 rounded-[5px] text-xs md:text-sm font-bold hover:bg-amsun-red transition-all duration-300 shadow-sm transform hover:-translate-y-0.5">
+                    <i class="fas fa-envelope"></i> amsun@uonbi.ac.ke
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        const modal = document.getElementById('partnership-modal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('partnership-modal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Close modal on escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} Event — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} Event{% endblock %}
+{% block breadcrumb %}Content / Events / {{ action }}{% endblock %}
+{% block nav_events %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:event-list' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to Events
+  </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:960px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;color:#86efac;">
+        <i class="fas fa-calendar-alt" style="margin-right:8px;"></i>{{ action }} Event
+      </h2>
+
+      <div class="form-group">
+        <label class="form-label">Event Title *</label>
+        {{ form.title }}
+        {% for e in form.title.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Date *</label>
+          {{ form.date }}
+          {% for e in form.date.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time *</label>
+          {{ form.time }}
+          {% for e in form.time.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Location *</label>
+          {{ form.location }}
+          {% for e in form.location.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Host / Organiser</label>
+          {{ form.host }}
+          {% for e in form.host.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        {{ form.category }}
+        {% for e in form.category.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <div class="tinymce-wrap">
+          {{ form.description }}
+        </div>
+        {% for e in form.description.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Event Image</label>
+        {% if obj and obj.image and obj.image.name != 'default.jpg' %}
+          <div style="margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+            <img src="{{ obj.image.url }}" style="height:70px;width:auto;border-radius:8px;border:1px solid #1f2d45;">
+            <span style="font-size:12px;color:#64748b;">Current image — upload a new one to replace</span>
+          </div>
+        {% endif %}
+        {{ form.image }}
+        {% for e in form.image.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;align-items:center;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> {{ action }} Event
+      </button>
+      <a href="{% url 'editorial:event-list' %}" class="btn btn-ghost">Cancel</a>
+      {% if obj %}
+      <a href="{% url 'editorial:event-delete' obj.pk %}" class="btn btn-danger" style="margin-left:auto;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  <style>
+    .tox-tinymce { border-radius: 8px !important; border-color: #1f2d45 !important; }
+    .tinymce-wrap { border-radius: 8px; overflow: hidden; }
+  </style>
+{% endblock %}

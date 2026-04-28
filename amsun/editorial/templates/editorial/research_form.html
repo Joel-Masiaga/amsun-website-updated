@@ -1,0 +1,79 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} Research — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} Research Article{% endblock %}
+{% block breadcrumb %}Admin / Research / {{ action }}{% endblock %}
+{% block nav_research %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:research-list' %}" class="btn btn-ghost btn-sm">
+    <i class="fas fa-arrow-left"></i> Back to Research
+  </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width:960px;">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="card">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;color:#f87171;">
+        <i class="fas fa-microscope" style="margin-right:8px;"></i>{{ action }} Research Article
+      </h2>
+
+      <div class="form-group">
+        <label class="form-label">Research Title *</label>
+        {{ form.title }}
+        {% for e in form.title.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Authors *</label>
+          {{ form.authors }}
+          {% for e in form.authors.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Journal *</label>
+          {{ form.journal }}
+          {% for e in form.journal.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Abstract *</label>
+        <div class="tinymce-wrap">
+          {{ form.abstract }}
+        </div>
+        {% for e in form.abstract.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Link / DOI URL</label>
+        {{ form.link }}
+        {% for e in form.link.errors %}<p class="form-error">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px;align-items:center;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> {{ action }} Article
+      </button>
+      <a href="{% url 'editorial:research-list' %}" class="btn btn-ghost">Cancel</a>
+      {% if obj %}
+      <a href="{% url 'editorial:research-delete' obj.pk %}" class="btn btn-danger" style="margin-left:auto;">
+        <i class="fas fa-trash"></i> Delete
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ form.media }}
+  <style>
+    .tox-tinymce { border-radius: 8px !important; border-color: #1f2d45 !important; }
+    .tinymce-wrap { border-radius: 8px; overflow: hidden; }
+  </style>
+{% endblock %}

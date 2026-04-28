@@ -1,0 +1,92 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}User Management — AMSUN Editorial{% endblock %}
+{% block page_title %}User Management{% endblock %}
+{% block breadcrumb %}Administration / Users{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:user-create' %}" class="btn btn-primary">
+    <i class="fas fa-user-plus"></i> Add User
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="section-header">
+    <div>
+      <div class="section-title">All Users</div>
+      <p class="text-muted" style="font-size:12px;margin-top:3px;">{{ users|length }} user{{ users|length|pluralize }} registered</p>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Staff</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td class="td-muted">{{ forloop.counter }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+              </div>
+              <span style="font-weight:500;">{{ user.email }}</span>
+            </div>
+          </td>
+          <td class="td-muted">{{ user.get_full_name|default:"—" }}</td>
+          <td>
+            {% if user.role == 'admin' %}
+              <span class="badge badge-red">Admin</span>
+            {% elif user.role == 'editor' %}
+              <span class="badge badge-gold">Editor</span>
+            {% elif user.role == 'alumni' %}
+              <span class="badge badge-blue">Alumni</span>
+            {% else %}
+              <span class="badge badge-gray">{{ user.role|title }}</span>
+            {% endif %}
+            {% if user.is_superuser %}
+              <span class="badge badge-red" style="margin-left:4px;">Superuser</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if user.is_staff %}
+              <span class="badge badge-green">Yes</span>
+            {% else %}
+              <span class="td-muted">—</span>
+            {% endif %}
+          </td>
+          <td class="td-muted">{{ user.date_joined|date:"M d, Y" }}</td>
+          <td>
+            {% if user != request.user %}
+            <div class="actions-cell">
+              <a href="{% url 'editorial:user-delete' user.pk %}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+            {% else %}
+            <span class="td-muted" style="font-size:11px;">You</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="text-align:center;padding:40px;color:#64748b;">No users found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

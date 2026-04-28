@@ -79,7 +79,7 @@
                                 {{ featured_blog.title }}
                             </h3>
                             <p class="text-gray-600 leading-relaxed line-clamp-3 mb-4">
-                                {{ featured_blog.body|truncatewords:50 }}
+                                {{ featured_blog.body|striptags|truncatewords:50 }}
                             </p>
                             <div class="flex items-center gap-4 text-sm">
                                 <div class="flex items-center gap-2">
@@ -126,7 +126,7 @@
                             {{ blog.title }}
                         </h3>
                         <p class="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-4 flex-grow">
-                            {{ blog.body|truncatewords:20 }}
+                            {{ blog.body|striptags|truncatewords:20 }}
                         </p>
                         <div class="flex items-center gap-3 text-xs">
                             <img src="https://ui-avatars.com/api/?name={{ blog.author }}&background=E3241C&color=fff" alt="Author" class="w-6 h-6 rounded-full">

@@ -549,3 +549,9 @@ class LeadershipView(TemplateView):
         
         return context
 
+
+class FinalistsDinnerView(TemplateView):
+    template_name = 'core/finalists_dinner.html'
+
+class GazetteView(TemplateView):
+    template_name = 'core/gazette.html'
