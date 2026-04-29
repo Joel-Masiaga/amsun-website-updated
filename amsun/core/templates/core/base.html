@@ -339,7 +339,7 @@
         </div>
 
         <div id="mobile-menu"
-            class="hidden lg:hidden absolute left-0 top-full w-full bg-white/95 backdrop-blur-md text-amsun-text border-t rounded-b-[5px] border-gray-100 shadow-xl z-50">
+            class="hidden lg:hidden absolute left-0 top-full w-full max-h-[calc(100vh-4rem)] overflow-y-auto bg-white/95 backdrop-blur-md text-amsun-text border-t rounded-b-[5px] border-gray-100 shadow-xl z-50 no-scrollbar">
 
             <div class="flex justify-end pt-3 pr-4 mb-2">
                 <button onclick="document.getElementById('mobile-menu').classList.add('hidden')"
@@ -508,6 +508,9 @@
                         <li><a href="#"
                                 class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
                                     class="fas fa-chevron-right text-xs"></i> Past Papers</a></li>
+                        <li><a href="{% url 'gazette' %}"
+                                class="hover:text-amsun-red hover:pl-3 transition-all duration-300 flex items-center gap-2"><i
+                                    class="fas fa-chevron-right text-xs"></i> AMSUN Gazette</a></li>
                     </ul>
                 </div>
                 <div>
