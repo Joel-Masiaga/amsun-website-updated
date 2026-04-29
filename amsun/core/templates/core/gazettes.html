@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 md:pt-40 md:pb-28 bg-amsun-black overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-amsun-black via-amsun-black to-amsun-red/20 opacity-90"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-amsun-red/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-amsun-gold/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 md:px-6 relative z-10 text-center">
+        <span class="inline-block py-1 px-3 rounded-full bg-amsun-red/10 text-amsun-red text-sm font-bold uppercase tracking-wider mb-4 border border-amsun-red/20 animate-fade-in-up">
+            Official Publication
+        </span>
+        <h1 class="text-4xl md:text-6xl font-display font-black text-white mb-6 leading-tight animate-fade-in-up" style="animation-delay: 0.1s;">
+            The AMSUN <span class="text-transparent bg-clip-text bg-gradient-to-r from-amsun-red to-amsun-gold">Gazette</span>
+        </h1>
+        <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+            Explore our collection of magazines featuring student stories, medical insights, research highlights, and community achievements.
+        </p>
+    </div>
+</section>
+
+<!-- Library Section -->
+<section class="py-16 md:py-24 bg-amsun-gray min-h-screen">
+    <div class="container mx-auto px-4 md:px-6">
+        
+        {% if gazettes_by_year %}
+            {% for year, gazettes in gazettes_by_year.items %}
+            <div class="mb-20 last:mb-0">
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-amsun-black">{{ year }} Collection</h2>
+                    <div class="h-px bg-gray-300 flex-grow"></div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-8">
+                    {% for gazette in gazettes %}
+                    <div class="group perspective">
+                        <a href="{% url 'gazette-read' gazette.pk %}" class="block relative transform transition-all duration-500 group-hover:-translate-y-2">
+                            <!-- Magazine Cover -->
+                            <div class="relative bg-white rounded-r-lg rounded-l-sm shadow-card group-hover:shadow-card-hover overflow-hidden transition-all duration-500 aspect-[3/4]">
+                                <!-- Spine binding effect -->
+                                <div class="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-black/20 to-transparent z-20"></div>
+                                <div class="absolute left-0 top-0 bottom-0 w-[1px] bg-white/30 z-20"></div>
+                                
+                                {% if gazette.cover_image %}
+                                    <img src="{{ gazette.cover_image.url }}" alt="{{ gazette.title }}" class="w-full h-full object-cover z-10 relative">
+                                {% else %}
+                                    <div class="w-full h-full flex flex-col items-center justify-center bg-amsun-black text-white p-4 text-center z-10 relative">
+                                        <i class="fas fa-book-medical text-4xl mb-3 text-amsun-gold"></i>
+                                        <span class="font-display font-bold text-lg">{{ gazette.month|title }}</span>
+                                        <span class="text-sm text-gray-400">{{ gazette.year }}</span>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Read overlay on hover -->
+                                <div class="absolute inset-0 bg-amsun-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30 flex items-center justify-center backdrop-blur-sm">
+                                    <span class="inline-flex items-center gap-2 bg-amsun-red text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                        <i class="fas fa-book-reader"></i> Read Issue
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Magazine Details -->
+                            <div class="mt-4 text-center">
+                                <span class="text-xs font-bold text-amsun-red uppercase tracking-wider block mb-1">{{ gazette.month|title }} Issue</span>
+                                <h3 class="text-sm md:text-base font-bold text-amsun-black leading-tight line-clamp-2">{{ gazette.title }}</h3>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-book-open text-4xl text-gray-300"></i>
+                </div>
+                <h3 class="text-2xl font-display font-bold text-amsun-black mb-2">Library is Empty</h3>
+                <p class="text-gray-500 max-w-md mx-auto">We are currently compiling our archives. Check back soon for the latest issues of the AMSUN Gazette.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.perspective { perspective: 1000px; }
+.shadow-card { box-shadow: -5px 0 15px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05); }
+.shadow-card-hover { box-shadow: -10px 0 25px rgba(0,0,0,0.15), 0 15px 35px rgba(0,0,0,0.1); }
+</style>
+{% endblock %}

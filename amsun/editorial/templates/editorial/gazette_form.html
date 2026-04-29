@@ -1,0 +1,77 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}{{ action }} Gazette — AMSUN Editorial{% endblock %}
+{% block page_title %}{{ action }} Gazette{% endblock %}
+{% block breadcrumb %}Admin / <a href="{% url 'editorial:gazette-list' %}" style="color:inherit;text-decoration:none;">Gazettes</a> / {{ action }}{% endblock %}
+{% block nav_gazette %}active{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width:800px;">
+  <div class="section-header">
+    <div class="section-title">{{ action }} {{ content_type }}</div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); color:#ef4444; padding:12px; border-radius:6px; margin-bottom:20px;">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="form-row">
+      <div class="form-group" style="flex:2;">
+        <label>Title</label>
+        {{ form.title }}
+        {{ form.title.errors }}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Month</label>
+        {{ form.month }}
+        {{ form.month.errors }}
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        {{ form.year }}
+        {{ form.year.errors }}
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Cover Image</label>
+        {{ form.cover_image }}
+        {{ form.cover_image.errors }}
+        {% if obj and obj.cover_image %}
+          <div style="margin-top:10px;">
+            <span class="text-muted" style="font-size:12px;">Current:</span><br>
+            <img src="{{ obj.cover_image.url }}" alt="Cover" style="max-height:100px;border-radius:4px;margin-top:5px;border:1px solid #1f2d45;">
+          </div>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label>PDF File</label>
+        {{ form.pdf_file }}
+        {{ form.pdf_file.errors }}
+        {% if obj and obj.pdf_file %}
+          <div style="margin-top:10px;">
+            <span class="text-muted" style="font-size:12px;">Current File:</span><br>
+            <a href="{{ obj.pdf_file.url }}" target="_blank" style="color:#4A90E2;font-size:13px;"><i class="fas fa-file-pdf"></i> View PDF</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="margin-top:30px; display:flex; gap:12px;">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Save {{ content_type }}
+      </button>
+      <a href="{% url 'editorial:gazette-list' %}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

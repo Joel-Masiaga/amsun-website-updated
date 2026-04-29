@@ -1,0 +1,81 @@
+{% extends 'editorial/base.html' %}
+
+{% block title %}Gazettes — AMSUN Editorial{% endblock %}
+{% block page_title %}AMSUN Gazettes{% endblock %}
+{% block breadcrumb %}Admin / Gazettes{% endblock %}
+{% block nav_gazette %}active{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'editorial:gazette-create' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Add Gazette
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="section-header">
+    <div>
+      <div class="section-title">All Gazettes</div>
+      <p class="text-muted" style="font-size:12px;margin-top:3px;">{{ gazettes|length }} gazette{{ gazettes|length|pluralize }} total</p>
+    </div>
+  </div>
+
+  {% if gazettes %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th style="width:70px;">Cover</th>
+          <th>Title</th>
+          <th>Issue</th>
+          <th>Added</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gazette in gazettes %}
+        <tr>
+          <td class="td-muted">{{ forloop.counter }}</td>
+          <td>
+            {% if gazette.cover_image %}
+              <div style="width:40px;height:55px;border-radius:4px;overflow:hidden;background:#0f172a;">
+                <img src="{{ gazette.cover_image.url }}" alt="Cover" style="width:100%;height:100%;object-fit:cover;">
+              </div>
+            {% else %}
+              <div style="width:40px;height:55px;border-radius:4px;background:#1e293b;display:flex;align-items:center;justify-center;color:#64748b;">
+                <i class="fas fa-book" style="margin:auto;"></i>
+              </div>
+            {% endif %}
+          </td>
+          <td>
+            <div style="font-weight:600;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ gazette.title }}</div>
+          </td>
+          <td><span class="badge badge-gold">{{ gazette.month|title }} {{ gazette.year }}</span></td>
+          <td class="td-muted">{{ gazette.published_date|date:"M d, Y" }}</td>
+          <td>
+            <div class="actions-cell">
+              <a href="{% url 'editorial:gazette-edit' gazette.pk %}" class="btn btn-edit btn-sm">
+                <i class="fas fa-pencil-alt"></i> Edit
+              </a>
+              <a href="{% url 'editorial:gazette-delete' gazette.pk %}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;">
+    <i class="fas fa-book-open" style="font-size:40px;color:#1f2d45;margin-bottom:12px;display:block;"></i>
+    <p style="color:#64748b;font-size:14px;">No gazettes uploaded yet.</p>
+    <a href="{% url 'editorial:gazette-create' %}" class="btn btn-primary" style="margin-top:14px;">
+      <i class="fas fa-plus"></i> Upload First Gazette
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

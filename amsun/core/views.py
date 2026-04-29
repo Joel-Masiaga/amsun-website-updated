@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView
 from django.utils import timezone
-from .models import Blog, News, Events, Research
+from .models import Blog, News, Events, Research, Gazette
 
 class HomeView(TemplateView):
     template_name = 'core/home.html'
@@ -553,5 +553,24 @@ class LeadershipView(TemplateView):
 class FinalistsDinnerView(TemplateView):
     template_name = 'core/finalists_dinner.html'
 
-class GazetteView(TemplateView):
-    template_name = 'core/gazette.html'
+class GazetteListView(ListView):
+    model = Gazette
+    template_name = 'core/gazettes.html'
+    context_object_name = 'gazettes'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Group gazettes by year
+        gazettes = Gazette.objects.all().order_by('-year', '-published_date')
+        years = {}
+        for gazette in gazettes:
+            if gazette.year not in years:
+                years[gazette.year] = []
+            years[gazette.year].append(gazette)
+        context['gazettes_by_year'] = years
+        return context
+
+class GazetteReaderView(DetailView):
+    model = Gazette
+    template_name = 'core/gazette_reader.html'
+    context_object_name = 'gazette'

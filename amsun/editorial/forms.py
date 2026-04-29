@@ -1,6 +1,6 @@
 from django import forms
 from tinymce.widgets import TinyMCE
-from core.models import Blog, News, Events, Research
+from core.models import Blog, News, Events, Research, Gazette
 from users.models import User
 
 
@@ -145,6 +145,23 @@ class ResearchForm(forms.ModelForm):
             'authors': forms.TextInput(attrs={'class': TEXT_INPUT, 'placeholder': 'Author names (comma-separated)'}),
             'journal': forms.TextInput(attrs={'class': TEXT_INPUT, 'placeholder': 'Journal name'}),
             'link':    forms.URLInput(attrs={'class': TEXT_INPUT, 'placeholder': 'https://…'}),
+        }
+
+
+# ---------------------------------------------------------------------------
+# Gazette Form
+# ---------------------------------------------------------------------------
+
+class GazetteForm(forms.ModelForm):
+    class Meta:
+        model  = Gazette
+        fields = ['title', 'year', 'month', 'cover_image', 'pdf_file']
+        widgets = {
+            'title':       forms.TextInput(attrs={'class': TEXT_INPUT, 'placeholder': 'e.g., The AMSUN Gazette - March 2025'}),
+            'year':        forms.NumberInput(attrs={'class': TEXT_INPUT, 'placeholder': 'e.g., 2025'}),
+            'month':       forms.Select(attrs={'class': SELECT}),
+            'cover_image': forms.ClearableFileInput(attrs={'class': FILE_INPUT}),
+            'pdf_file':    forms.ClearableFileInput(attrs={'class': FILE_INPUT}),
         }
 
 

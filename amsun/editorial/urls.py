@@ -35,6 +35,12 @@ urlpatterns = [
     path('research/<int:pk>/edit/',      views.research_edit,   name='research-edit'),
     path('research/<int:pk>/delete/',    views.research_delete, name='research-delete'),
 
+    # Gazettes
+    path('gazettes/',                    views.gazette_list,   name='gazette-list'),
+    path('gazettes/create/',             views.gazette_create, name='gazette-create'),
+    path('gazettes/<int:pk>/edit/',      views.gazette_edit,   name='gazette-edit'),
+    path('gazettes/<int:pk>/delete/',    views.gazette_delete, name='gazette-delete'),
+
     # Users (admin only)
     path('users/',                   views.user_list,   name='user-list'),
     path('users/create/',            views.user_create, name='user-create'),

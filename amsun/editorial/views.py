@@ -4,12 +4,12 @@ from django.contrib import messages
 from django.utils import timezone
 from django.urls import reverse
 
-from core.models import Blog, News, Events, Research
+from core.models import Blog, News, Events, Research, Gazette
 from users.models import User
 
 from .decorators import editorial_login_required, admin_required
 from .forms import (
-    BlogForm, NewsForm, EventForm, ResearchForm,
+    BlogForm, NewsForm, EventForm, ResearchForm, GazetteForm,
     EditorCreateForm, EditorialLoginForm,
 )
 
@@ -62,6 +62,7 @@ def dashboard(request):
         'news':     News.objects.count(),
         'events':   Events.objects.count(),
         'research': Research.objects.count(),
+        'gazettes': Gazette.objects.count(),
     }
     recent_blogs  = Blog.objects.order_by('-created_at')[:5]
     recent_news   = News.objects.order_by('-published_date')[:5]
@@ -288,6 +289,60 @@ def research_delete(request, pk):
         'obj': article, 'obj_name': article.title,
         'content_type': 'Research',
         'cancel_url': reverse('editorial:research-list'),
+        'is_admin': True,
+    })
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Gazettes (admin only)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@admin_required
+def gazette_list(request):
+    gazettes = Gazette.objects.all()
+    return render(request, 'editorial/gazette_list.html', {
+        'gazettes': gazettes, 'is_admin': True,
+    })
+
+
+@admin_required
+def gazette_create(request):
+    form = GazetteForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Gazette added successfully.')
+        return redirect('editorial:gazette-list')
+    return render(request, 'editorial/gazette_form.html', {
+        'form': form, 'action': 'Create', 'content_type': 'Gazette',
+        'is_admin': True,
+    })
+
+
+@admin_required
+def gazette_edit(request, pk):
+    gazette = get_object_or_404(Gazette, pk=pk)
+    form    = GazetteForm(request.POST or None, request.FILES or None, instance=gazette)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Gazette updated successfully.')
+        return redirect('editorial:gazette-list')
+    return render(request, 'editorial/gazette_form.html', {
+        'form': form, 'action': 'Edit', 'content_type': 'Gazette', 'obj': gazette,
+        'is_admin': True,
+    })
+
+
+@admin_required
+def gazette_delete(request, pk):
+    gazette = get_object_or_404(Gazette, pk=pk)
+    if request.method == 'POST':
+        gazette.delete()
+        messages.success(request, 'Gazette deleted successfully.')
+        return redirect('editorial:gazette-list')
+    return render(request, 'editorial/confirm_delete.html', {
+        'obj': gazette, 'obj_name': gazette.title,
+        'content_type': 'Gazette',
+        'cancel_url': reverse('editorial:gazette-list'),
         'is_admin': True,
     })
 

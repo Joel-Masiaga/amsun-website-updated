@@ -77,3 +77,23 @@ class Research(models.Model):
     def __str__(self):
         return self.title
     
+class Gazette(models.Model):
+    MONTH_CHOICES = [
+        ('january', 'January'), ('february', 'February'), ('march', 'March'),
+        ('april', 'April'), ('may', 'May'), ('june', 'June'),
+        ('july', 'July'), ('august', 'August'), ('september', 'September'),
+        ('october', 'October'), ('november', 'November'), ('december', 'December')
+    ]
+    
+    title = models.CharField(max_length=200, help_text="e.g., The AMSUN Gazette - March 2025")
+    year = models.IntegerField()
+    month = models.CharField(max_length=20, choices=MONTH_CHOICES)
+    cover_image = models.ImageField(upload_to='gazette_covers/')
+    pdf_file = models.FileField(upload_to='gazette_pdfs/')
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-year', '-published_date']
+
+    def __str__(self):
+        return f"{self.title} ({self.month.capitalize()} {self.year})"

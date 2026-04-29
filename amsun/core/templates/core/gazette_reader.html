@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ gazette.title }} - Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Open Sans"', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        amsun: {
+                            red: '#E3241C',
+                            black: '#1A1A1A',
+                            gold: '#F9B233',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { margin: 0; overflow: hidden; background: #0f172a; }
+        .reader-header {
+            height: 60px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 50;
+        }
+        .reader-container {
+            position: absolute;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Toolbar -->
+    <header class="reader-header">
+        <div class="flex items-center gap-4">
+            <a href="{% url 'gazette' %}" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-amsun-red transition-colors" title="Back to Library">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="hidden md:block">
+                <h1 class="text-white font-display font-bold text-sm leading-tight">{{ gazette.title }}</h1>
+                <p class="text-gray-400 text-xs">{{ gazette.month|title }} {{ gazette.year }} Issue</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ gazette.pdf_file.url }}" download class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-md text-sm font-bold transition-colors flex items-center gap-2">
+                <i class="fas fa-download"></i> <span class="hidden sm:inline">Download PDF</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- PDF Viewer -->
+    <div class="reader-container">
+        <!-- We use the native browser PDF viewer by embedding the file in an iframe. 
+             Appending #toolbar=0&navpanes=0&scrollbar=1 makes it look cleaner in most browsers -->
+        <iframe src="{{ gazette.pdf_file.url }}#toolbar=1&navpanes=0&view=FitH" title="{{ gazette.title }}">
+            <p>Your browser does not support PDFs. <a href="{{ gazette.pdf_file.url }}">Download the PDF</a>.</p>
+        </iframe>
+    </div>
+
+</body>
+</html>

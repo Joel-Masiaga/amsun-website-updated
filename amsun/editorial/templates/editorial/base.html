@@ -427,6 +427,10 @@
   </a>
 
   {% if is_admin %}
+  <a href="{% url 'editorial:gazette-list' %}" class="nav-link {% block nav_gazette %}{% endblock %}">
+    <i class="fas fa-book-open"></i> Gazettes
+    <span class="nav-badge admin">Admin</span>
+  </a>
   <a href="{% url 'editorial:research-list' %}" class="nav-link {% block nav_research %}{% endblock %}">
     <i class="fas fa-microscope"></i> Research
     <span class="nav-badge admin">Admin</span>
